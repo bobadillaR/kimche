@@ -12,7 +12,7 @@ export default class LandingPage extends Component {
   render() {
     return (
       <div>
-        texto de prueba
+        Cambie la wea
       </div>
     );
   }
