@@ -25,8 +25,8 @@ export default class EditUser extends Component {
       nombre: '',
       rut: '',
       celular: '',
-      mail: '',
-      tipo: '',
+      email: '',
+      admin: false,
       alert: false,
     };
   }
@@ -35,15 +35,15 @@ export default class EditUser extends Component {
     const { editable, database } = this.props;
     if (editable) {
       database.child('users').child(this.props.match.params.userId).on('value', user =>
-        this.setState({ nombre: user.val().nombre, rut: user.val().rut, celular: user.val().celular, email: user.val().email, tipo: user.val().tipo }),
+        this.setState({ nombre: user.val().nombre, rut: user.val().rut, celular: user.val().celular, email: user.val().email, admin: user.val().admin }),
       );
     }
   }
 
   create() {
     const { secondaryApp, database } = this.props;
-    const { nombre, tipo, email, celular, rut, admin } = this.state;
-    if (nombre && tipo && rut && email) {
+    const { nombre, email, celular, rut, admin } = this.state;
+    if (nombre && rut && email) {
       this.setState({ loading: true });
       secondaryApp.auth().createUserWithEmailAndPassword(email, rut).catch(error => this.setState({ error }))
       .then(user =>
@@ -56,31 +56,31 @@ export default class EditUser extends Component {
           celular,
         })
         .then(secondaryApp.auth().signOut())
-        .then(this.setState({ loading: false, alert: true })),
+        .then(this.setState({ loading: false, alert: true, nombre: '', email: '', admin: false, rut: '', celular: '' })),
       );
-    }
+    } else console.log('faltan cosas');
   }
 
   edit() {
-    const { nombre, tipo, email, celular, rut } = this.state;
+    const { nombre, email, celular, rut, admin } = this.state;
     const { database } = this.props;
     this.setState({ loading: true });
-    if (nombre && tipo && rut && email) {
+    if (nombre && rut && email) {
       this.setState({ loading: true });
       database.child(`/users/${this.props.match.params.userId}`).update({
         email,
         nombre,
         visibility: true,
-        tipo,
         rut,
         celular,
+        admin,
       })
       .then(this.setState({ loading: false, alert: true }));
     }
   }
 
   render() {
-    const { loading, errorNombre, errorMail, errorCelular, errorRut, admin, nombre, celular, rut, email, tipo, alert } = this.state;
+    const { loading, errorNombre, errorMail, errorCelular, errorRut, admin, nombre, celular, rut, email, alert } = this.state;
     const { editable } = this.props;
     return (
       <div>
@@ -91,14 +91,14 @@ export default class EditUser extends Component {
               <RaisedButton primary icon={<FontIcon className="material-icons" >list</FontIcon>} label="Ver Tabla" />
             </Link>
           </div>
-          {alert && <Message message={`Se ha ${editable ? 'editado' : 'creado'} el usuario ${nombre}`} tipo="success" time={4000} />}
+          {alert && <Message message={`Se ha ${editable ? 'editado' : 'creado'} el usuario ${nombre}`} tipo="success" time={4000} onClose={() => this.setState({ alert: false })} />}
           <div style={{ alignItems: 'center', display: 'flex' }}>
             <FontIcon style={{ marginRight: '2%' }} className="material-icons" >face</FontIcon>
             <TextField value={nombre} floatingLabelFixed hintText="Nombre de usuario" floatingLabelText="Nombre" onChange={(event, nombreVal) => this.setState({ nombre: nombreVal })} fullWidth errorText={errorNombre && 'Campo obligatorio'} />
           </div>
           <div style={{ alignItems: 'center', display: 'flex' }}>
             <FontIcon style={{ marginRight: '2%' }} className="material-icons" >email</FontIcon>
-            <TextField value={email} floatingLabelFixed hintText="Mail de usuario" floatingLabelText="Mail" onChange={(event, mailVal) => this.setState({ mail: mailVal })} fullWidth errorText={errorMail && 'Campo obligatorio'} />
+            <TextField value={email} floatingLabelFixed hintText="Mail de usuario" floatingLabelText="Mail" onChange={(event, mailVal) => this.setState({ email: mailVal })} fullWidth errorText={errorMail && 'Campo obligatorio'} />
           </div>
           <div style={{ alignItems: 'center', display: 'flex' }}>
             <FontIcon style={{ marginRight: '2%' }} className="material-icons" >vpn_key</FontIcon>
@@ -110,7 +110,7 @@ export default class EditUser extends Component {
           </div>
           <div style={{ alignItems: 'center', display: 'flex' }}>
             <FontIcon style={{ marginRight: '2%' }} className="material-icons" >school</FontIcon>
-            <TextField value={celular} floatingLabelFixed hintText="Celular de usuario" floatingLabelText="Celular" onChange={(event, celularVal) => this.setState({ celular: celularVal })} fullWidth errorText={errorCelular && 'Campo obligatorio'} />
+            {/* <TextField value={''} floatingLabelFixed hintText="Celular de usuario" floatingLabelText="Celular" onChange={(event, celularVal) => this.setState({ celular: celularVal })} fullWidth errorText={errorCelular && 'Campo obligatorio'} /> */}
           </div>
           <br />
           <Checkbox
@@ -119,7 +119,7 @@ export default class EditUser extends Component {
             label={`${!admin ? 'No es' : 'Es'} Super Administrador`}
             onCheck={(event, adminValue) => this.setState({ admin: adminValue })}
             labelStyle={{ marginLeft: '1%' }}
-            value={tipo}
+            checked={admin}
           />
           <br />
           <RaisedButton style={{ float: 'right' }} primary disabled={loading} icon={<FontIcon className="material-icons" >person_add</FontIcon>} label={editable ? 'Editar Usuario' : 'Crear Usuario'} onTouchTap={() => { if (editable) this.edit(); else this.create(); }} />

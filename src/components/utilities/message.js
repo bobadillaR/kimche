@@ -16,7 +16,22 @@ export default class Message extends Component {
 
   componentWillMount() {
     const { time } = this.props;
-    if (time > 0) setTimeout(() => this.setState({ visible: false }), time);
+    if (time > 0) {
+      setTimeout(() => {
+        this.setState({ visible: false });
+        this.props.onClose();
+      }, time);
+    }
+  }
+
+  componentWillReceiveProps() {
+    const { time } = this.props;
+    if (time > 0) {
+      setTimeout(() => {
+        this.setState({ visible: false });
+        this.props.onClose();
+      }, time);
+    }
   }
 
   tipoColor() {
@@ -55,6 +70,7 @@ Message.propTypes = {
   tipo: PropTypes.string.isRequired,
   message: PropTypes.string.isRequired,
   time: PropTypes.int,
+  onClose: PropTypes.func,
 };
 
 Message.defaultProps = {

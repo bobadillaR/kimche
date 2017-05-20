@@ -49,7 +49,7 @@ class Navbar extends Component {
             <ToolbarSeparator />
             <ToolbarTitle style={{ marginLeft: 20, paddingRight: 0 }} text={userData.nombre} />
             <ToolbarSeparator />
-            <IconMenu style={{ paddingLeft: 10 }} iconButtonElement={<FontIcon className="material-icons" >person</FontIcon>} anchorOrigin={{ horizontal: 'left', vertical: 'top' }} targetOrigin={{ horizontal: 'left', vertical: 'top' }}>
+            <IconMenu style={{ paddingLeft: 10, cursor: 'pointer' }} iconButtonElement={<FontIcon className="material-icons" >person</FontIcon>} anchorOrigin={{ horizontal: 'left', vertical: 'top' }} targetOrigin={{ horizontal: 'left', vertical: 'top' }}>
               <MenuItem primaryText="Mi Usuario" />
               <MenuItem primaryText="Desconectarse" onTouchTap={() => auth.signOut().then(() => this.props.history.push('/'))} />
             </IconMenu>

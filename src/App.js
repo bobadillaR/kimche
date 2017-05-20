@@ -13,6 +13,8 @@ import EditUser from './components/editUser';
 import ViewUsers from './components/viewUsers';
 import EditSchool from './components/editSchool';
 import ViewSchools from './components/viewSchools';
+import EditMessage from './components/editMessage';
+import ViewMessages from './components/viewMessages';
 
 import './App.css';
 
@@ -33,12 +35,12 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     const config = {
-      apiKey: 'AIzaSyBY-ObbJit9RFBoZfFObPvhcwUE15X46ME',
-      authDomain: 'kimche-cf3a2.firebaseapp.com',
-      databaseURL: 'https://kimche-cf3a2.firebaseio.com',
-      projectId: 'kimche-cf3a2',
-      storageBucket: 'kimche-cf3a2.appspot.com',
-      messagingSenderId: '113879070712',
+      apiKey: 'AIzaSyD2FgC94jHT3aKDQihS3jwfFyTu3iumteM',
+      authDomain: 'kimche-web.firebaseapp.com',
+      databaseURL: 'https://kimche-web.firebaseio.com',
+      projectId: 'kimche-web',
+      storageBucket: 'kimche-web.appspot.com',
+      messagingSenderId: '53601270408',
     };
     firebase.initializeApp(config);
     const mobileDetect = new MobileDetect(window.navigator.userAgent);
@@ -89,6 +91,9 @@ export default class App extends Component {
           {user && <Route exact path="/admin/schools/create" render={props => <EditSchool editable={false} {...this.state} {...props} />} />}
           {user && <Route exact path="/admin/schools/edit/:schoolId" render={props => <EditSchool editable {...this.state} {...props} />} />}
           {user && <Route exact path="/admin/schools" render={props => <ViewSchools {...this.state} {...props} />} />}
+          {user && <Route exact path="/admin/messages/create" render={props => <EditMessage editable={false} {...this.state} {...props} />} />}
+          {user && <Route exact path="/admin/messages/edit/:messageId" render={props => <EditMessage editable {...this.state} {...props} />} />}
+          {user && <Route exact path="/admin/messages" render={props => <ViewMessages {...this.state} {...props} />} />}
         </div>
       </Router>
     );
