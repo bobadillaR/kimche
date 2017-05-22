@@ -80,7 +80,7 @@ export default class App extends Component {
     return (
       <Router history={history}>
         <div>
-          <Navbar history={history} {...this.state} />
+          {/* <Navbar history={history} {...this.state} /> */}
           <Route exact path="/" render={props => <LandingPage {...this.state} {...props} />} />
           <Route path="/login" render={props => <Login {...this.state} {...props} />} />
           {user && <Route exact path="/admin/users/create" render={props => <EditUser editable={false} {...this.state} {...props} />} />}
