@@ -24,13 +24,13 @@ export default class ViewSchools extends Component {
 
   findTeacher(key) {
     const { users, schools } = this.state;
-    if (schools[key].teachers !== undefined) return Object.entries(schools[key].teachers).map(([keyUser, value]) => value && users[keyUser]).map(user => <p>{user.nombre}</p>);
+    if (schools[key].teachers !== undefined) return Object.entries(schools[key].teachers).map(([keyUser, value]) => value && users[keyUser]).map((user, array, id) => <p key={id}>{user.nombre}</p>);
     else return '';
   }
 
   findAdmin(key) {
     const { users, schools } = this.state;
-    if (schools[key].admins !== undefined) return Object.entries(schools[key].admins).map(([keyUser, value]) => value && users[keyUser]).map(user => <p>{user.nombre}</p>);
+    if (schools[key].admins !== undefined) return Object.entries(schools[key].admins).map(([keyUser, value]) => value && users[keyUser]).map((user, array, id) => <p key={id}>{user.nombre}</p>);
     else return '';
   }
 

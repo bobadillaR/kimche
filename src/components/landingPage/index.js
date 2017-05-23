@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import '../vendor/font-awesome/css/font-awesome.min.css';
-import '../css/agency.min.css';
-import '../vendor/bootstrap/css/bootstrap.css';
+import { Link } from 'react-router-dom';
+
+import './vendor/font-awesome/css/font-awesome.min.css';
+import './css/agency.min.css';
+import './vendor/bootstrap/css/bootstrap.css';
 
 
 export default class LandingPage extends Component {
@@ -20,9 +22,9 @@ export default class LandingPage extends Component {
               Menu
               <i className="fa fa-bars" />
             </button>
-            <a href="#">
-              <img className="img-fluid d-block mx-auto" src={require('../img/logo.png')} alt="" />
-            </a>
+            <Link to="/">
+              <img className="img-fluid d-block mx-auto" src={require('./img/logo.png')} alt="" />
+            </Link>
             <div className="collapse navbar-collapse" id="navbarResponsive">
               <ul className="navbar-nav ml-auto">
                 <li className="nav-item">
@@ -99,7 +101,7 @@ export default class LandingPage extends Component {
                 <ul className="timeline">
                   <li>
                     <div className="timeline-image">
-                      <img className="rounded-circle img-fluid" src={require('../img/about/1.png')} />
+                      <img className="rounded-circle img-fluid" src={require('./img/about/1.png')} />
                     </div>
                     <div className="timeline-panel">
                       <div className="timeline-heading">
@@ -113,7 +115,7 @@ export default class LandingPage extends Component {
                   </li>
                   <li className="timeline-inverted">
                     <div className="timeline-image">
-                      <img className="rounded-circle img-fluid" src={require('../img/about/2.jpg')} />
+                      <img className="rounded-circle img-fluid" src={require('./img/about/2.jpg')} />
                     </div>
                     <div className="timeline-panel">
                       <div className="timeline-heading">
@@ -127,7 +129,7 @@ export default class LandingPage extends Component {
                   </li>
                   <li>
                     <div className="timeline-image">
-                      <img className="rounded-circle img-fluid" src={require('../img/about/3.jpg')} />
+                      <img className="rounded-circle img-fluid" src={require('./img/about/3.jpg')} />
                     </div>
                     <div className="timeline-panel">
                       <div className="timeline-heading">
@@ -142,7 +144,7 @@ export default class LandingPage extends Component {
                   </li>
                   <li className="timeline-inverted">
                     <div className="timeline-image">
-                      <img className="rounded-circle img-fluid" src={require('../img/about/4.jpg')}/>
+                      <img className="rounded-circle img-fluid" src={require('./img/about/4.jpg')}/>
                     </div>
                     <div className="timeline-panel">
                       <div className="timeline-heading">
@@ -180,17 +182,17 @@ export default class LandingPage extends Component {
             <div className="row">
               <div className="col-md-4 col-sm-8">
                 <a href="#">
-                  <img className="img-fluid d-block mx-auto" src={require('../img/logos/designmodo.jpg')} />
+                  <img className="img-fluid d-block mx-auto" src={require('./img/logos/designmodo.jpg')} />
                 </a>
               </div>
               <div className="col-md-4 col-sm-8">
                 <a href="#">
-                  <img className="img-fluid d-block mx-auto" src={require('../img/logos/themeforest.jpg')} />
+                  <img className="img-fluid d-block mx-auto" src={require('./img/logos/themeforest.jpg')} />
                 </a>
               </div>
               <div className="col-md-4 col-sm-8">
                 <a href="#">
-                  <img className="img-fluid d-block mx-auto" src={require('../img/logos/envato.jpg')} />
+                  <img className="img-fluid d-block mx-auto" src={require('./img/logos/envato.jpg')} />
                 </a>
               </div>
             </div>

@@ -9,6 +9,11 @@ import RaisedButton from 'material-ui/RaisedButton';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import CircularProgress from 'material-ui/CircularProgress';
+import Checkbox from 'material-ui/Checkbox';
+
+import ActionFavorite from 'material-ui/svg-icons/action/visibility';
+import ActionFavoriteBorder from 'material-ui/svg-icons/action/visibility-off';
+
 
 import Message from './utilities/message';
 
@@ -30,6 +35,7 @@ export default class EditMessage extends Component {
       adminsList: [],
       tipoList: { felicitar: 'Felicitar', apoyar: 'Apoyar', corregir: 'Corregir', conservar: 'Conservar', soporte: 'Soporte' },
       title: '',
+      visible: true,
     };
   }
 
@@ -70,17 +76,19 @@ export default class EditMessage extends Component {
 
   create() {
     const { database } = this.props;
-    const { texto, admins, teachers, school, tipo } = this.state;
+    const { texto, admins, teachers, school, tipo, title, visible } = this.state;
     if (texto && school && tipo) {
       this.setState({ loading: true });
       const update = {};
       const messageKey = database.child('school').push().key;
+      update[`messages/${messageKey}/title`] = title;
+      update[`messages/${messageKey}/visible`] = visible;
       update[`messages/${messageKey}/text`] = texto;
       update[`messages/${messageKey}/tipo`] = tipo;
       update[`schools/${school}/messages/${messageKey}`] = true;
       update[`messages/${messageKey}/school`] = school;
       update[`messages/${messageKey}/state`] = 0;
-      update[`messages/${messageKey}/createData`] = moment().format('DD-MM-YYYY, h:mm a');
+      update[`messages/${messageKey}/createDate`] = moment().format('DD-MM-YYYY, h:mm a');
       update[`messages/${messageKey}/editDate`] = moment().format('DD-MM-YYYY, h:mm a');
       teachers.forEach((userKey) => {
         update[`users/${userKey}/messages/${messageKey}`] = true;
@@ -97,10 +105,13 @@ export default class EditMessage extends Component {
 
   edit() {
     const { database } = this.props;
-    const { texto, admins, teachers, school, tipo, initialAdmin, initialTeacher, messageId, oldSchool } = this.state;
+    const { texto, admins, teachers, school, tipo, initialAdmin, initialTeacher, messageId, oldSchool, title, visible } = this.state;
     if (texto && school && tipo) {
       this.setState({ loading: true });
       const update = {};
+      update[`messages/${messageId}/state`] = 0;
+      update[`messages/${messageId}/title`] = title;
+      update[`messages/${messageId}/visible`] = visible;
       update[`messages/${messageId}/text`] = texto;
       update[`messages/${messageId}/tipo`] = tipo;
       update[`schools/${school}/messages/${messageId}`] = true;
@@ -154,7 +165,7 @@ export default class EditMessage extends Component {
   }
 
   render() {
-    const { loading, errorNombre, alert, texto, admins, school, teachers, schools, teachersList, adminsList, tipoList, tipo, title, errorTitle } = this.state;
+    const { loading, errorNombre, alert, texto, admins, school, teachers, schools, teachersList, adminsList, tipoList, tipo, title, errorTitle, visible } = this.state;
     const { editable } = this.props;
     return (
       <div>
@@ -208,6 +219,15 @@ export default class EditMessage extends Component {
               )}
             </SelectField>
           </div>
+          <br />
+          <Checkbox
+            checkedIcon={<ActionFavorite />}
+            uncheckedIcon={<ActionFavoriteBorder />}
+            label={`${!visible ? 'No es' : 'Es'} Visible`}
+            onCheck={(event, visibleValue) => this.setState({ visible: visibleValue })}
+            labelStyle={{ marginLeft: '1%' }}
+            checked={visible}
+          />
           <br />
           <RaisedButton style={{ float: 'right' }} primary disabled={loading} icon={<FontIcon className="material-icons" >{editable ? 'edit' : 'add_circle'}</FontIcon>} label={editable ? 'Editar Aviso' : 'Crear Aviso'} onTouchTap={() => { if (editable) this.edit(); else this.create(); }} />
           <br />

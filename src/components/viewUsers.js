@@ -8,6 +8,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { yellow500 } from 'material-ui/styles/colors';
 
 // TODO: add loading
+// TODO: add schools
 
 export default class ViewUsers extends Component {
 

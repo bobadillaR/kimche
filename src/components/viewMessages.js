@@ -48,13 +48,15 @@ export default class ViewMessages extends Component {
           <Table>
             <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
               <TableRow>
-                <TableHeaderColumn colSpan="6" tooltip="Tabla de Usuarios" style={{ textAlign: 'center' }}>
+                <TableHeaderColumn colSpan="8" tooltip="Tabla de Usuarios" style={{ textAlign: 'center' }}>
                   Tabla de Avisos
                 </TableHeaderColumn>
               </TableRow>
               <TableRow>
+                <TableHeaderColumn tooltip="Titulo del Aviso">Titulo</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Nombre del Aviso">Colegio</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Administradores son usuarios que pueden ver todos los mensajes del colegio">Hora de Creacion</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Administradores son usuarios que pueden ver todos los mensajes del colegio">Fecha de Creacion</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Administradores son usuarios que pueden ver todos los mensajes del colegio">Fecha de Edicion</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Administradores son usuarios que pueden ver todos los mensajes del colegio">Administradores</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Profesores solo pueden ver sus mensajes">Profesores</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Profesores solo pueden ver sus mensajes">Mensaje</TableHeaderColumn>
@@ -64,8 +66,10 @@ export default class ViewMessages extends Component {
             <TableBody showRowHover displayRowCheckbox={false}>
               {Object.entries(messages).map(([key, value]) => (
                 <TableRow key={key}>
+                  <TableRowColumn>{value.title}</TableRowColumn>
                   <TableRowColumn>{schools[value.school] && schools[value.school].nombre}</TableRowColumn>
-                  <TableRowColumn>{value.createData}</TableRowColumn>
+                  <TableRowColumn>{value.createDate}</TableRowColumn>
+                  <TableRowColumn>{value.editDate}</TableRowColumn>
                   <TableRowColumn>{this.findTeacher(key)}</TableRowColumn>
                   <TableRowColumn>{this.findAdmin(key)}</TableRowColumn>
                   <TableRowColumn>{value.text}</TableRowColumn>
