@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import Paper from 'material-ui/Paper';
@@ -14,7 +13,6 @@ export default class ViewSchools extends Component {
     this.state = {
       users: {},
       schools: {},
-      schoolRelations: {},
     };
   }
 
@@ -22,17 +20,18 @@ export default class ViewSchools extends Component {
     const { database } = this.props;
     database.child('users').on('value', users => this.setState({ users: users.val() }));
     database.child('schools').on('value', schools => this.setState({ schools: schools.val() }));
-    database.child('schoolRelations').on('value', (schools) => {
-      if (schools.val() !== null) this.setState({ schoolRelations: schools.val() });
-    });
   }
 
-  findUser(key, tipo) {
-    const { schoolRelations, users } = this.state;
-    if (schoolRelations[key] !== undefined) {
-      const usersFinded = Object.entries(schoolRelations[key]).map(([keyUser, value]) => value === tipo && users[keyUser]);
-      return usersFinded.map(user => <p>{user.nombre}</p>);
-    } else return '';
+  findTeacher(key) {
+    const { users, schools } = this.state;
+    if (schools[key].teachers !== undefined) return Object.entries(schools[key].teachers).map(([keyUser, value]) => value && users[keyUser]).map(user => <p>{user.nombre}</p>);
+    else return '';
+  }
+
+  findAdmin(key) {
+    const { users, schools } = this.state;
+    if (schools[key].admins !== undefined) return Object.entries(schools[key].admins).map(([keyUser, value]) => value && users[keyUser]).map(user => <p>{user.nombre}</p>);
+    else return '';
   }
 
   render() {
@@ -64,9 +63,9 @@ export default class ViewSchools extends Component {
               {Object.entries(schools).map(([key, value]) => (
                 <TableRow key={key}>
                   <TableRowColumn>{value.nombre}</TableRowColumn>
-                  <TableRowColumn>{this.findUser(key, 'A')}</TableRowColumn>
-                  <TableRowColumn>{this.findUser(key, 'T')}</TableRowColumn>
-                  <TableRowColumn style={{ cursor: 'pointer' }} onTouchTap={() => this.props.history.push(`/admin/schools/edit/${key}`)}>Editar <FontIcon className="material-icons" >edit</FontIcon></TableRowColumn>
+                  <TableRowColumn>{this.findAdmin(key)}</TableRowColumn>
+                  <TableRowColumn>{this.findTeacher(key)}</TableRowColumn>
+                  <TableRowColumn style={{ cursor: 'pointer', alignItems: 'center', display: 'flex' }} onTouchTap={() => this.props.history.push(`/admin/schools/edit/${key}`)}>Editar <FontIcon className="material-icons" >edit</FontIcon></TableRowColumn>
                 </TableRow>
               ))}
             </TableBody>
@@ -76,8 +75,3 @@ export default class ViewSchools extends Component {
     );
   }
 }
-
-ViewSchools.propTypes = {
-  database: PropTypes.shape.isRequired,
-  history: PropTypes.shape.isRequired,
-};

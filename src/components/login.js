@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
@@ -36,7 +35,7 @@ export default class Login extends Component {
     .then(user =>
       database.child(`users/${user.uid}`).on('value', (userData) => {
         if (userData.val().admin) this.props.history.push('/admin/users');
-        else this.props.history.push('/main/messages');
+        else this.props.history.push('/main');
         this.setState({ loading: false });
       }),
     )
@@ -59,18 +58,20 @@ export default class Login extends Component {
         <Paper style={{ height: '50%', width: '75%', padding: 20 }} zDepth={4} >
           <Paper zDepth={2} >
             <center>
-              <img alt="dsadas" src={logo} height={60} />
+              <img alt="presentation" src={logo} height={60} />
             </center>
           </Paper>
           {recoveryView && <Message message="Agregue el mail de usuario para enviarle un mensaje con la informacion de recuperacion de contraseña" tipo="info" />}
           {messageRecovery && <Message message="Se ha enviado un mail para restablecer su contraseña" tipo="success" time={4000} />}
-          <TextField hintText="Mail de usuario" floatingLabelText="Mail" onChange={(event, email) => this.setState({ email })} fullWidth errorText={error && error.code.includes('mail') && 'Ingrese un mail valido'} />
-          {!recoveryView && <div>
-            <TextField hintText="Contraseña" floatingLabelText="Contraseña" type="password" onChange={(event, password) => this.setState({ password })} fullWidth errorText={error && error.code.includes('password') && 'Lo lamentamos no hemos podido ingresar con este usuario y contraseña'} />
-            <RaisedButton primary disabled={loading} label="Iniciar Sesión" fullWidth onTouchTap={() => this.login()} />
-          </div>
-          }
-          <br />
+          <form onSubmit={() => this.login()}>
+            <TextField hintText="Mail de usuario" floatingLabelText="Mail" onChange={(event, email) => this.setState({ email })} fullWidth errorText={error && error.code.includes('mail') && 'Ingrese un mail valido'} />
+            {!recoveryView && <div>
+              <TextField hintText="Contraseña" floatingLabelText="Contraseña" type="password" onChange={(event, password) => this.setState({ password })} fullWidth errorText={error && error.code.includes('password') && 'Lo lamentamos no hemos podido ingresar con este usuario y contraseña'} />
+              <RaisedButton onSubmit={() => this.login()} primary disabled={loading} label="Iniciar Sesión" fullWidth onTouchTap={() => this.login()} />
+            </div>
+            }
+            <br />
+          </form>
           <Divider />
           <br />
           <FlatButton label="Recuperar Contraseña" disabled={loading} primary onTouchTap={() => { if (!recoveryView) this.setState({ recoveryView: true }); else this.recovery(); }} fullWidth={recoveryView} icon={<FontIcon className="material-icons" >vpn_key</FontIcon>} />
@@ -89,9 +90,3 @@ export default class Login extends Component {
     );
   }
 }
-
-Login.propTypes = {
-  auth: PropTypes.shape.isRequired,
-  database: PropTypes.shape.isRequired,
-  history: PropTypes.shape.isRequired,
-};

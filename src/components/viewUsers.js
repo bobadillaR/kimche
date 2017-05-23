@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import Paper from 'material-ui/Paper';
 import FontIcon from 'material-ui/FontIcon';
 import RaisedButton from 'material-ui/RaisedButton';
+import { yellow500 } from 'material-ui/styles/colors';
 
 // TODO: add loading
 
@@ -24,13 +24,16 @@ export default class ViewUsers extends Component {
     const { database } = this.props;
     database.child('users').on('value', users => this.setState({ users: users.val() }));
     database.child('schools').on('value', schools => this.setState({ schools: schools.val() }));
-    database.child('userRelations').on('value', users => this.setState({ userRelations: users.val() }));
+    // database.child('userRelations').on('value', users => this.setState({ userRelations: users.val() }));
   }
 
   findSchool(key) {
-    const { userRelations, schools } = this.state;
-    if (userRelations[key] !== undefined) return Object.entries(userRelations[key]).map(([keyUser]) => <p>{schools[keyUser].nombre}</p>);
-    else return '';
+    const { users, schools } = this.state;
+    const schoolsValue = [];
+    if (users[key].admins !== undefined) Object.entries(users[key].admins).map(([keySchools]) => schoolsValue.push(<p style={{ alignItems: 'center', display: 'flex' }} ><FontIcon className="material-icons" >assignment_ind</FontIcon> {schools[keySchools].nombre}</p>));
+    if (users[key].teachers !== undefined) Object.entries(users[key].teachers).map(([keySchools]) => schoolsValue.push(<p style={{ alignItems: 'center', display: 'flex' }}><FontIcon className="material-icons" >face</FontIcon> {schools[keySchools].nombre}</p>));
+    return schoolsValue;
+    // if (users[key].teachers !== undefined) console.log(Object.entries(users[key].teachers).map(([keySchools]) => schools[keySchools]).map(user => <p>{user.nombre} - Teacher</p>));
   }
 
   render() {
@@ -64,11 +67,11 @@ export default class ViewUsers extends Component {
               {Object.entries(users).map(([key, value]) => (
                 <TableRow key={key}>
                   <TableRowColumn>{value.rut}</TableRowColumn>
-                  <TableRowColumn>{value.nombre}</TableRowColumn>
+                  <TableRowColumn style={{ alignItems: 'center', display: 'flex' }}>{value.admin && <FontIcon color={yellow500} className="material-icons" >star</FontIcon>}{value.nombre}</TableRowColumn>
                   <TableRowColumn>{this.findSchool(key)}</TableRowColumn>
                   <TableRowColumn>{value.email}</TableRowColumn>
                   <TableRowColumn>{value.celular}</TableRowColumn>
-                  <TableRowColumn style={{ cursor: 'pointer' }} onTouchTap={() => this.props.history.push(`/admin/users/edit/${key}`)}>Editar <FontIcon className="material-icons" >edit</FontIcon></TableRowColumn>
+                  <TableRowColumn style={{ alignItems: 'center', display: 'flex', cursor: 'pointer' }} onTouchTap={() => this.props.history.push(`/admin/users/edit/${key}`)}>Editar <FontIcon className="material-icons" >edit</FontIcon></TableRowColumn>
                 </TableRow>
               ))}
             </TableBody>
@@ -78,8 +81,3 @@ export default class ViewUsers extends Component {
     );
   }
 }
-
-ViewUsers.propTypes = {
-  database: PropTypes.shape.isRequired,
-  history: PropTypes.shape.isRequired,
-};

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 
 import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
@@ -9,6 +8,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import FlatButton from 'material-ui/FlatButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
+import CircularProgress from 'material-ui/CircularProgress';
 
 import logo from '../img/logoChico.png';
 
@@ -21,7 +21,7 @@ class Navbar extends Component {
   }
 
   render() {
-    const { mobileDetect, userData, user, auth } = this.props;
+    const { mobileDetect, userData, user, auth, update } = this.props;
     return (
       <Toolbar>
         <Link to="/" >
@@ -29,7 +29,7 @@ class Navbar extends Component {
         </Link>
         {user ?
           <ToolbarGroup>
-            {userData.admin ?
+            {userData.admin &&
               <ToolbarGroup>
                 <Link to="/admin/users">
                   <FlatButton style={{ marginLeft: 0, marginRight: 0 }} label="Usuarios" primary icon={<FontIcon className="material-icons" >person</FontIcon>} />
@@ -41,15 +41,11 @@ class Navbar extends Component {
                   <FlatButton style={{ marginLeft: 0, marginRight: 0 }} label="Avisos" primary icon={<FontIcon className="material-icons" >message</FontIcon>} />
                 </Link>
               </ToolbarGroup>
-              :
-              <ToolbarGroup>
-                a
-              </ToolbarGroup>
             }
             <ToolbarSeparator />
             <ToolbarTitle style={{ marginLeft: 20, paddingRight: 0 }} text={userData.nombre} />
             <ToolbarSeparator />
-            <IconMenu style={{ paddingLeft: 10 }} iconButtonElement={<FontIcon className="material-icons" >person</FontIcon>} anchorOrigin={{ horizontal: 'left', vertical: 'top' }} targetOrigin={{ horizontal: 'left', vertical: 'top' }}>
+            <IconMenu style={{ paddingLeft: 10, cursor: 'pointer' }} iconButtonElement={<FontIcon className="material-icons" >person</FontIcon>} anchorOrigin={{ horizontal: 'left', vertical: 'top' }} targetOrigin={{ horizontal: 'left', vertical: 'top' }}>
               <MenuItem primaryText="Mi Usuario" />
               <MenuItem primaryText="Desconectarse" onTouchTap={() => auth.signOut().then(() => this.props.history.push('/'))} />
             </IconMenu>
@@ -59,11 +55,14 @@ class Navbar extends Component {
             <ToolbarSeparator />
             <Link to="/login" style={{ marginLeft: 10 }} >
               {mobileDetect.mobile() === null ?
-                <RaisedButton label="Iniciar Sesion" primary icon={<FontIcon className="material-icons" >person</FontIcon>} />
+                update ?
+                  <CircularProgress />
+                  :
+                  <RaisedButton label="Iniciar Sesion" primary icon={<FontIcon className="material-icons" >person</FontIcon>} />
                 :
-                <FloatingActionButton mini>
-                  <FontIcon className="material-icons" >person</FontIcon>
-                </FloatingActionButton>
+                  <FloatingActionButton mini>
+                    <FontIcon className="material-icons" >person</FontIcon>
+                  </FloatingActionButton>
               }
             </Link>
           </ToolbarGroup>
@@ -74,13 +73,3 @@ class Navbar extends Component {
 }
 
 export default withRouter(Navbar);
-
-Navbar.propTypes = {
-  mobileDetect: PropTypes.shape.isRequired,
-  auth: PropTypes.shape.isRequired,
-  userData: PropTypes.shape.isRequired,
-  user: PropTypes.shape.isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-};
