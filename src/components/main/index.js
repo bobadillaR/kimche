@@ -30,7 +30,7 @@ export default class Main extends Component {
       <div style={{ display: 'flex', marginTop: '10%', justifyContent: 'center' }}>
         <Paper style={{ width: '95%', padding: 10 }}>
           <div>
-            <h2>Tus Avisos</h2>
+            <h2>Mis Avisos</h2>
             <hr />
             {loading && <center><CircularProgress /></center>}
             {Object.entries(messages).map(([id, message]) => <Aviso message={message} id={id} database={database} messagesKey={messagesKey[id]} />)}

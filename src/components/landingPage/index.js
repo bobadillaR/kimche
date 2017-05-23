@@ -14,6 +14,7 @@ export default class LandingPage extends Component {
   }
 
   render() {
+    const { user, userData } = this.props;
     return (
       <div>
         <nav className="navbar fixed-top navbar-toggleable-md navbar-inverse" id="mainNav">
@@ -28,13 +29,18 @@ export default class LandingPage extends Component {
             <div className="collapse navbar-collapse" id="navbarResponsive">
               <ul className="navbar-nav ml-auto">
                 <li className="nav-item">
-                  <a className="nav-link" href="#services">¿Qué ganas?</a>
+                  <a className="nav-link">¿Qué ganas?</a>
                 </li>
                 <li className="nav-item">
                   <a className="nav-link" href="#about">¿Cómo funciona?</a>
                 </li>
                 <li className="nav-item">
                   <a className="nav-link" href="#contact">Contacto</a>
+                </li>
+                <li className="nav-item">
+                  <Link to={user ? userData.admin ? '/admin/messages' : '/main' : '/login'}>
+                    <a className="nav-link">Entrar</a>
+                  </Link>
                 </li>
               </ul>
             </div>

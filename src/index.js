@@ -26,8 +26,9 @@ import Main from './components/main';
 import './index.css';
 
 const muiTheme = getMuiTheme({
-  appBar: {
-    height: 50, // Instead of 64
+  toolbar: {
+    height: 60, // Instead of 64
+    backgroundColor: '#222222',
   },
 });
 
