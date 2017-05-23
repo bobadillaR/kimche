@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import Paper from 'material-ui/Paper';
@@ -27,12 +26,12 @@ export default class ViewMessages extends Component {
 
   findTeacher(key) {
     const { users, messages } = this.state;
-    return messages[key].teachers !== undefined ? Object.entries(messages[key].teachers).map(([teacher]) => <p>{users[teacher].nombre}</p>) : '';
+    return messages[key].teachers !== undefined ? Object.entries(messages[key].teachers).map(([teacher]) => <p key={teacher}>{users[teacher].nombre}</p>) : '';
   }
 
   findAdmin(key) {
     const { users, messages } = this.state;
-    return messages[key].admins !== undefined ? Object.entries(messages[key].admins).map(([admin]) => <p>{users[admin].nombre}</p>) : '';
+    return messages[key].admins !== undefined ? Object.entries(messages[key].admins).map(([admin]) => <p key={admin}>{users[admin].nombre}</p>) : '';
   }
 
   render() {
@@ -80,8 +79,3 @@ export default class ViewMessages extends Component {
     );
   }
 }
-
-ViewMessages.propTypes = {
-  database: PropTypes.shape.isRequired,
-  history: PropTypes.shape.isRequired,
-};

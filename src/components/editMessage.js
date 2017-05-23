@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 
@@ -30,6 +29,7 @@ export default class EditMessage extends Component {
       admins: [],
       adminsList: [],
       tipoList: { felicitar: 'Felicitar', apoyar: 'Apoyar', corregir: 'Corregir', conservar: 'Conservar', soporte: 'Soporte' },
+      title: '',
     };
   }
 
@@ -46,6 +46,7 @@ export default class EditMessage extends Component {
             messageId,
             texto: message.val().text,
             tipo: message.val().tipo,
+            title: message.val().title,
             school: message.val().school,
             oldSchool: message.val().school,
             teachers: message.val().teachers !== undefined ? Object.entries(message.val().teachers).map(([key]) => key) : [],
@@ -55,7 +56,7 @@ export default class EditMessage extends Component {
             loading: false,
           });
         });
-      }
+      } else this.setState({ loading: false });
     });
   }
 
@@ -78,8 +79,9 @@ export default class EditMessage extends Component {
       update[`messages/${messageKey}/tipo`] = tipo;
       update[`schools/${school}/messages/${messageKey}`] = true;
       update[`messages/${messageKey}/school`] = school;
-      update[`messages/${messageKey}/estate`] = 0;
+      update[`messages/${messageKey}/state`] = 0;
       update[`messages/${messageKey}/createData`] = moment().format('DD-MM-YYYY, h:mm a');
+      update[`messages/${messageKey}/editDate`] = moment().format('DD-MM-YYYY, h:mm a');
       teachers.forEach((userKey) => {
         update[`users/${userKey}/messages/${messageKey}`] = true;
         update[`messages/${messageKey}/teachers/${userKey}`] = true;
@@ -152,7 +154,7 @@ export default class EditMessage extends Component {
   }
 
   render() {
-    const { loading, errorNombre, alert, texto, admins, school, teachers, schools, teachersList, adminsList, tipoList, tipo } = this.state;
+    const { loading, errorNombre, alert, texto, admins, school, teachers, schools, teachersList, adminsList, tipoList, tipo, title, errorTitle } = this.state;
     const { editable } = this.props;
     return (
       <div>
@@ -165,6 +167,10 @@ export default class EditMessage extends Component {
           </div>
           {loading && <center><CircularProgress size={80} thickness={5} /></center>}
           {alert && <Message message={`Se ha ${editable ? 'editado' : 'creado'} el colegio ${texto}`} tipo="success" time={4000} onClose={() => this.setState({ alert: false })} />}
+          <div style={{ alignItems: 'center', display: 'flex' }}>
+            <FontIcon style={{ marginRight: '2%' }} className="material-icons" >title</FontIcon>
+            <TextField value={title} floatingLabelFixed hintText="Titulo del aviso" floatingLabelText="Titulo" onChange={(event, textoVal) => this.setState({ title: textoVal })} fullWidth errorText={errorTitle && 'Campo obligatorio'} />
+          </div>
           <div style={{ alignItems: 'center', display: 'flex' }}>
             <FontIcon style={{ marginRight: '2%' }} className="material-icons" >message</FontIcon>
             <TextField value={texto} floatingLabelFixed hintText="Texto del aviso" floatingLabelText="Texto" onChange={(event, textoVal) => this.setState({ texto: textoVal })} fullWidth errorText={errorNombre && 'Campo obligatorio'} />
@@ -211,12 +217,3 @@ export default class EditMessage extends Component {
     );
   }
 }
-
-EditMessage.propTypes = {
-  // auth: PropTypes.shape,
-  database: PropTypes.shape.isRequired,
-  // secondaryApp: PropTypes.shape.isRequired,
-  // history: PropTypes.shape.isRequired,
-  match: PropTypes.shape.isRequired,
-  editable: PropTypes.shape.isRequired,
-};

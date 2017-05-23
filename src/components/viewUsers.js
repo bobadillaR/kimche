@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import Paper from 'material-ui/Paper';
@@ -82,8 +81,3 @@ export default class ViewUsers extends Component {
     );
   }
 }
-
-ViewUsers.propTypes = {
-  database: PropTypes.shape.isRequired,
-  history: PropTypes.shape.isRequired,
-};

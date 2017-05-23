@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 
 import Paper from 'material-ui/Paper';
 import FontIcon from 'material-ui/FontIcon';
@@ -56,7 +55,7 @@ export default class Message extends Component {
     return (
       <div>
         {visible &&
-          <Paper style={{ backgroundColor: this.tipoColor(), marginTop: 10, marginBottom: 10, alignItems: 'center', display: 'flex' }}zDepth={1} >
+          <Paper style={{ backgroundColor: this.tipoColor(), marginTop: 10, marginBottom: 10, alignItems: 'center', display: 'flex' }} zDepth={1} >
             <FontIcon style={{ marginLeft: '5%' }} className="material-icons">{this.tipoIcon()}</FontIcon>
             <p style={{ marginLeft: '5%', marginRight: '2%' }}>{message}</p>
           </Paper>
@@ -65,14 +64,3 @@ export default class Message extends Component {
     );
   }
 }
-
-Message.propTypes = {
-  tipo: PropTypes.string.isRequired,
-  message: PropTypes.string.isRequired,
-  time: PropTypes.int,
-  onClose: PropTypes.func,
-};
-
-Message.defaultProps = {
-  time: 0,
-};

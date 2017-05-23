@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import TextField from 'material-ui/TextField';
@@ -161,12 +160,3 @@ export default class EditSchool extends Component {
     );
   }
 }
-
-EditSchool.propTypes = {
-  // auth: PropTypes.shape,
-  database: PropTypes.shape.isRequired,
-  // secondaryApp: PropTypes.shape.isRequired,
-  // history: PropTypes.shape.isRequired,
-  match: PropTypes.shape.isRequired,
-  editable: PropTypes.shape.isRequired,
-};

@@ -21,8 +21,7 @@
         "no-use-before-define": [0],
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "react/prefer-stateless-function": [1],
-        "jsx-a11y/img-has-alt": [0],
-        "react/prop-types": [1],
+        "react/prop-types": [0],
         "react/require-default-props": [0]
     }
 }
