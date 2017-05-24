@@ -56,7 +56,7 @@ export default class Aviso extends Component {
       <Paper zIndex={5} style={{ margin: 10 }} onClick={() => !expand && this.expand(id, message, true)}>
         <Card key={id} zDepth={2} onExpandChange={value => this.expand(id, message, value)}>
           <CardHeader
-            avatar={<FontIcon className="material-icons" >{chooseIcon[message.tipo]}</FontIcon>}
+            avatar={<FontIcon className="material-icons" style={{fontSize: '42'}} >{chooseIcon[message.tipo]}</FontIcon>}
             style={{ backgroundColor: chooseColor[message.tipo] }}
             title={message.title}
             subtitle={`Fecha de creacion: ${message.createDate}`}
