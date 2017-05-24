@@ -29,8 +29,11 @@ const muiTheme = getMuiTheme({
   toolbar: {
     height: 60, // Instead of 64
     backgroundColor: '#222222',
+    iconColor:'white',
   },
+
 });
+
 
 // TODO: review ga
 
