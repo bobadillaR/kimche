@@ -87,16 +87,16 @@ export default class EditMessage extends Component {
       update[`messages/${messageKey}/tipo`] = tipo;
       update[`schools/${school}/messages/${messageKey}`] = true;
       update[`messages/${messageKey}/school`] = school;
-      update[`messages/${messageKey}/state`] = 0;
       update[`messages/${messageKey}/createDate`] = moment().format('DD-MM-YYYY, h:mm a');
-      update[`messages/${messageKey}/editDate`] = moment().format('DD-MM-YYYY, h:mm a');
       teachers.forEach((userKey) => {
-        update[`users/${userKey}/messages/${messageKey}`] = true;
-        update[`messages/${messageKey}/teachers/${userKey}`] = true;
+        update[`users/${userKey}/teachers/${school}/${messageKey}`] = true;
+        update[`messages/${messageKey}/teachers/${userKey}/state`] = 0;
+        update[`messages/${messageKey}/teachers/${userKey}/editDate`] = moment().format('DD-MM-YYYY, h:mm a');
       });
       admins.forEach((userKey) => {
-        update[`users/${userKey}/messages/${messageKey}`] = true;
-        update[`messages/${messageKey}/admins/${userKey}`] = true;
+        update[`users/${userKey}/admins/${school}/${messageKey}`] = true;
+        update[`messages/${messageKey}/admins/${userKey}/state`] = 0;
+        update[`messages/${messageKey}/admins/${userKey}/editDate`] = moment().format('DD-MM-YYYY, h:mm a');
       });
       database.update(update)
       .then(this.setState({ loading: false, alert: true }));
@@ -131,19 +131,21 @@ export default class EditMessage extends Component {
 
       oldTeachers.forEach((oldTeacher) => {
         update[`messages/${messageId}/teachers/${oldTeacher}`] = null;
-        update[`users/${oldTeacher}/messages/${messageId}`] = null;
+        update[`users/${oldTeacher}/teachers/${messageId}`] = null;
       });
       newTeachers.forEach((newTeacher) => {
-        update[`messages/${messageId}/teachers/${newTeacher}`] = true;
-        update[`users/${newTeacher}/messages/${messageId}`] = true;
+        update[`users/${newTeacher}/teachers/${school}/${messageId}`] = true;
+        update[`messages/${messageId}/teachers/${newTeacher}/state`] = 0;
+        update[`messages/${messageId}/teachers/${newTeacher}/editDate`] = moment().format('DD-MM-YYYY, h:mm a');
       });
       oldAdmins.forEach((oldAdmin) => {
         update[`messages/${messageId}/admins/${oldAdmin}`] = null;
-        update[`users/${oldAdmin}/messages/${messageId}`] = null;
+        update[`users/${oldAdmin}/admins/${messageId}`] = null;
       });
       newAdmins.forEach((newAdmin) => {
-        update[`messages/${messageId}/admins/${newAdmin}`] = true;
-        update[`users/${newAdmin}/messages/${messageId}`] = true;
+        update[`users/${newAdmin}/admins/${school}/${messageId}`] = true;
+        update[`messages/${messageId}/admins/${newAdmin}/state`] = 0;
+        update[`messages/${messageId}/admins/${newAdmin}/editDate`] = moment().format('DD-MM-YYYY, h:mm a');
       });
       database.update(update)
       .then(this.setState({ loading: false, alert: true }));
@@ -180,15 +182,15 @@ export default class EditMessage extends Component {
           {alert && <Message message={`Se ha ${editable ? 'editado' : 'creado'} el colegio ${texto}`} tipo="success" time={4000} onClose={() => this.setState({ alert: false })} />}
           <div style={{ alignItems: 'center', display: 'flex' }}>
             <FontIcon style={{ marginRight: '2%' }} className="material-icons" >title</FontIcon>
-            <TextField value={title} floatingLabelFixed hintText="Titulo del aviso" floatingLabelText="Titulo" onChange={(event, textoVal) => this.setState({ title: textoVal })} fullWidth errorText={errorTitle && 'Campo obligatorio'} />
+            <TextField value={title} hintText="Titulo del aviso" floatingLabelText="Titulo" onChange={(event, textoVal) => this.setState({ title: textoVal })} fullWidth errorText={errorTitle && 'Campo obligatorio'} />
           </div>
           <div style={{ alignItems: 'center', display: 'flex' }}>
             <FontIcon style={{ marginRight: '2%' }} className="material-icons" >message</FontIcon>
-            <TextField value={texto} floatingLabelFixed hintText="Texto del aviso" floatingLabelText="Texto" onChange={(event, textoVal) => this.setState({ texto: textoVal })} fullWidth errorText={errorNombre && 'Campo obligatorio'} />
+            <TextField value={texto} hintText="Texto del aviso" floatingLabelText="Texto" onChange={(event, textoVal) => this.setState({ texto: textoVal })} fullWidth errorText={errorNombre && 'Campo obligatorio'} />
           </div>
           <div style={{ alignItems: 'center', display: 'flex' }}>
             <FontIcon style={{ marginRight: '2%' }} className="material-icons" >school</FontIcon>
-            <SelectField value={school} floatingLabelFixed hintText="Nombre del colegio" floatingLabelText="Colegio" onChange={(event, index, value) => this.findUsers(value)} fullWidth >
+            <SelectField value={school} hintText="Nombre del colegio" floatingLabelText="Colegio" onChange={(event, index, value) => this.findUsers(value)} fullWidth >
               {Object.entries(schools).map(([key, value]) => (
                 <MenuItem key={key} value={key} primaryText={value.nombre} />
               ))}
@@ -196,7 +198,7 @@ export default class EditMessage extends Component {
           </div>
           <div style={{ alignItems: 'center', display: 'flex' }}>
             <FontIcon style={{ marginRight: '2%' }} className="material-icons" >assignment_ind</FontIcon>
-            <SelectField multiple value={admins} disabled={adminsList.length === 0} floatingLabelFixed hintText="Administradores del colegio" floatingLabelText="Administradores" onChange={(event, index, value) => this.setState({ admins: value })} fullWidth >
+            <SelectField multiple value={admins} disabled={adminsList.length === 0} hintText="Administradores del colegio" floatingLabelText="Administradores" onChange={(event, index, value) => this.setState({ admins: value })} fullWidth >
               {Object.entries(adminsList).map(([key, value]) =>
                 <MenuItem key={key} value={key} primaryText={value.nombre} />,
               )}
