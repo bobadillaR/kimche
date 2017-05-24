@@ -10,7 +10,7 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import CircularProgress from 'material-ui/CircularProgress';
 
-import logo from '../img/logoChico.png';
+import logo from '../components/landingPage/img/logo.png';
 
 class Navbar extends Component {
 
@@ -23,7 +23,7 @@ class Navbar extends Component {
   render() {
     const { mobileDetect, userData, user, auth, update } = this.props;
     return (
-      <Toolbar>
+      <Toolbar primary>
         <Link to="/" >
           <img alt="dsadas" src={logo} height={40} style={{ marginTop: 8 }} />
         </Link>
@@ -45,7 +45,7 @@ class Navbar extends Component {
             <ToolbarSeparator />
             <ToolbarTitle style={{ marginLeft: 20, paddingRight: 0 }} text={userData.nombre} />
             <ToolbarSeparator />
-            <IconMenu style={{ paddingLeft: 10, cursor: 'pointer' }} iconButtonElement={<FontIcon className="material-icons" >person</FontIcon>} anchorOrigin={{ horizontal: 'left', vertical: 'top' }} targetOrigin={{ horizontal: 'left', vertical: 'top' }}>
+            <IconMenu style={{ paddingLeft: 10, cursor: 'pointer'}} iconButtonElement={<FontIcon style={{color: 'white'}} className="material-icons">account_circle</FontIcon>} anchorOrigin={{ horizontal: 'left', vertical: 'top' }} targetOrigin={{ horizontal: 'left', vertical: 'top' }}>
               <MenuItem primaryText="Mi Usuario" />
               <MenuItem primaryText="Desconectarse" onTouchTap={() => auth.signOut().then(() => this.props.history.push('/'))} />
             </IconMenu>
