@@ -72,7 +72,6 @@ export default class Aviso extends Component {
             actAsExpander
             showExpandableButton
           />
-          {alert && <Message message={'Se ha completado el aviso'} style={{ margin: 5 }} tipo="success" time={4000} onClose={() => this.setState({ alert: false })} />}
           <Stepper activeStep={state} orientation="vertical">
             <Step active={expand && state >= 0}>
               <StepLabel>Ver el aviso</StepLabel>
@@ -83,17 +82,22 @@ export default class Aviso extends Component {
             <Step active={expand && state >= 1}>
               <StepLabel>¿Por qué pasó?</StepLabel>
               <StepContent>
-                <div style={{ alignItems: 'center', display: 'flex' }}>
-                  <FontIcon style={{ marginRight: '2%' }} className="material-icons" >school</FontIcon>
-                  <TextField value={porque} floatingLabelFixed hintText="Explicación..." floatingLabelText="Porque paso?" onChange={(event, porqueVal) => this.setState({ porque: porqueVal })} fullWidth />
+                <div>
+                  {alert === 2 && <Message message={'Se han guardado los cambios'} style={{ margin: 5 }} tipo="success" time={4000} onClose={() => this.setState({ alert: false })} />}
+                  <div style={{ alignItems: 'center', display: 'flex' }}>
+                    <FontIcon style={{ marginRight: '2%' }} className="material-icons" >school</FontIcon>
+                    <TextField value={porque} floatingLabelFixed hintText="Explicación..." floatingLabelText="Porque paso?" onChange={(event, porqueVal) => this.setState({ porque: porqueVal })} fullWidth />
+                  </div>
                 </div>
                 <CardActions>
                   <RaisedButton
                     primary
                     disabled={loading}
                     label="Enviar"
-                    onTouchTap={() => database.child('messages').child(messageKey).update({ porque, state: 2 })
-                    }
+                    onTouchTap={() => {
+                      database.child('messages').child(messageKey).update({ porque, state: state > 2 ? 3 : 2 });
+                      this.setState({ alert: 2 });
+                    }}
                   />
                 </CardActions>
               </StepContent>
@@ -101,9 +105,12 @@ export default class Aviso extends Component {
             <Step active={expand && state >= 2}>
               <StepLabel>¿Qué se hizo?</StepLabel>
               <StepContent>
-                <div style={{ alignItems: 'center', display: 'flex' }}>
-                  <FontIcon style={{ marginRight: '2%' }} className="material-icons" >school</FontIcon>
-                  <TextField value={que} floatingLabelFixed hintText="Explicación" floatingLabelText="Que paso?" onChange={(event, queVal) => this.setState({ que: queVal })} fullWidth />
+                <div>
+                  {alert === 3 && <Message message={'Se ha completado el aviso'} style={{ margin: 5 }} tipo="success" time={4000} onClose={() => this.setState({ alert: false })} />}
+                  <div style={{ alignItems: 'center', display: 'flex' }}>
+                    <FontIcon style={{ marginRight: '2%' }} className="material-icons" >school</FontIcon>
+                    <TextField value={que} floatingLabelFixed hintText="Explicación" floatingLabelText="Que paso?" onChange={(event, queVal) => this.setState({ que: queVal })} fullWidth />
+                  </div>
                 </div>
                 <CardActions>
                   <RaisedButton
@@ -112,7 +119,7 @@ export default class Aviso extends Component {
                     label="Enviar"
                     onTouchTap={() => {
                       database.child('messages').child(messageKey).update({ que, state: 3 });
-                      this.setState({ alert: true });
+                      this.setState({ alert: 3 });
                     }}
                   />
                 </CardActions>

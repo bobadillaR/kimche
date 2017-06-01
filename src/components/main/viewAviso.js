@@ -64,7 +64,7 @@ export default class ViewAviso extends Component {
               <Step active={expand && message.state >= 0}>
                 <StepLabel>Ver el aviso</StepLabel>
                 <StepContent>
-                  {message.text.split('/n').map(par => <p>{par}</p>)}
+                  {message.text.split('/n').map(par => <p key={par}>{par}</p>)}
                 </StepContent>
               </Step>
               <Step active={expand && message.state >= 1}>

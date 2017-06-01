@@ -29,6 +29,7 @@ export default class Main extends Component {
   componentWillMount() {
     const { userData, database } = this.props;
     if (userData !== null && userData.schools !== undefined) {
+      this.setState({ loading: true });
       const dataMessages = Object.keys(userData.schools[Object.keys(userData.schools)[0]].messages);
       if (Object.values(userData.schools)[0].admin) {
         database.child('schools').child(Object.keys(userData.schools)[0]).on('value', data =>
@@ -37,6 +38,7 @@ export default class Main extends Component {
             admin: true,
             school: Object.keys(userData.schools)[0],
             users: Object.assign({}, data.val().admins, data.val().teachers),
+            loading: false,
           }),
         );
       } else {
@@ -44,6 +46,7 @@ export default class Main extends Component {
           messagesKey: dataMessages,
           admin: false,
           school: Object.keys(userData.schools)[0],
+          loading: false,
         });
       }
     }
@@ -53,6 +56,7 @@ export default class Main extends Component {
     const { userData, database } = this.props;
     const { update } = this.state;
     if (update && userData !== null && userData.schools !== undefined) {
+      this.setState({ loading: true });
       const dataMessages = Object.keys(userData.schools[Object.keys(userData.schools)[0]].messages);
       if (Object.values(userData.schools)[0].admin) {
         database.child('schools').child(Object.keys(userData.schools)[0]).on('value', data =>
@@ -62,6 +66,7 @@ export default class Main extends Component {
             admin: true,
             school: Object.keys(userData.schools)[0],
             users: Object.assign({}, data.val().admins, data.val().teachers),
+            loading: false,
           }),
         );
       } else {
@@ -70,6 +75,7 @@ export default class Main extends Component {
           messagesKey: dataMessages,
           admin: false,
           school: Object.keys(userData.schools)[0],
+          loading: false,
         });
       }
     }
@@ -79,13 +85,14 @@ export default class Main extends Component {
     const { database } = this.props;
     const { school } = this.state;
     this.setState({ loading: true });
-    database.child(`users/${userKey}/schools/${school}/messages`).on('value', data =>
-      this.setState({ loading: false, userSelectedMessages: Object.keys(data.val()), teacherSelecter: userKey }),
+    database.child(`users/${userKey}/schools/${school}`).on('value', data =>
+      this.setState({ loading: false, userSelectedMessages: data.val().messages !== undefined ? Object.keys(data.val().messages) : [], teacherSelecter: userKey }),
     );
   }
 
   render() {
     const { loading, tab, messagesKey, teacherSelecter, admin, users, userSelectedMessages } = this.state;
+    const { user } = this.props;
     return (
       <div>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -112,7 +119,7 @@ export default class Main extends Component {
                   <div>
                     <hr />
                     {messagesKey.map(message => <Aviso key={message} messageKey={message} {...this.props} />)}
-                    {messagesKey.length === 0 &&
+                    {messagesKey.length < 1 &&
                       <Paper style={{ width: '95%', padding: 10 }}>
                         <h4>No tienes Mensajes Aun</h4>
                       </Paper>
@@ -125,18 +132,19 @@ export default class Main extends Component {
                     <div style={{ alignItems: 'center', display: 'flex' }}>
                       <FontIcon style={{ marginRight: '2%' }} className="material-icons" >face</FontIcon>
                       <SelectField value={teacherSelecter} floatingLabelFixed hintText="Selecciona un profesor" floatingLabelText="Profesor" onChange={(event, textoVal, key) => this.selectUser(key)} fullWidth >
-                        {Object.entries(users).map(([id, teacher]) =>
+                        {Object.entries(users).filter(([id]) => id !== user.uid).map(([id, teacher]) =>
                           <MenuItem key={id} value={id} primaryText={teacher} />,
                         )}
                       </SelectField>
                     </div>
-                    {userSelectedMessages.map(message =>
-                      <ViewAviso key={message} messageKey={message} {...this.props} />,
-                    )}
-                    {teacherSelecter !== '' && userSelectedMessages.length === 0 &&
-                      <Paper style={{ width: '95%', padding: 10 }}>
-                        <h4>No tienes Mensajes Aun</h4>
+                    {teacherSelecter !== '' && userSelectedMessages.length === 0 ?
+                      <Paper style={{ width: '95%', padding: 10, margin: 10 }}>
+                        <h4>Este Usuario no tiene Mensajes</h4>
                       </Paper>
+                      :
+                      userSelectedMessages.map(message =>
+                        <ViewAviso key={message} messageKey={message} {...this.props} />,
+                      )
                     }
                   </div>
                 }
