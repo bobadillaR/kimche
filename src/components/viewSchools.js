@@ -18,21 +18,20 @@ export default class ViewSchools extends Component {
 
   componentWillMount() {
     const { database } = this.props;
-    database.child('users').on('value', users => this.setState({ users: users.val() }));
-    database.child('schools').on('value', schools => this.setState({ schools: schools.val() }));
+    database.child('schools').on('value', schools => this.setState({ schools: schools.val() || {} }));
   }
 
-  findTeacher(key) {
-    const { users, schools } = this.state;
-    if (schools[key].teachers !== undefined) return Object.entries(schools[key].teachers).map(([keyUser, value]) => value && users[keyUser]).map((user, array, id) => <p key={id}>{user.nombre}</p>);
-    else return '';
-  }
-
-  findAdmin(key) {
-    const { users, schools } = this.state;
-    if (schools[key].admins !== undefined) return Object.entries(schools[key].admins).map(([keyUser, value]) => value && users[keyUser]).map((user, array, id) => <p key={id}>{user.nombre}</p>);
-    else return '';
-  }
+  // findTeacher(key) {
+  //   const { users, schools } = this.state;
+  //   if (schools[key].teachers !== undefined) return Object.entries(schools[key].teachers).map(([keyUser, value]) => value && users[keyUser]).map((user, array, id) => <p key={id}>{user.nombre}</p>);
+  //   else return '';
+  // }
+  //
+  // findAdmin(key) {
+  //   const { users, schools } = this.state;
+  //   if (schools[key].admins !== undefined) return Object.entries(schools[key].admins).map(([keyUser, value]) => value && users[keyUser]).map((user, array, id) => <p key={id}>{user.nombre}</p>);
+  //   else return '';
+  // }
 
   render() {
     const { schools } = this.state;
@@ -62,9 +61,9 @@ export default class ViewSchools extends Component {
             <TableBody showRowHover displayRowCheckbox={false}>
               {Object.entries(schools).map(([key, value]) => (
                 <TableRow key={key}>
-                  <TableRowColumn>{value.nombre}</TableRowColumn>
-                  <TableRowColumn>{this.findAdmin(key)}</TableRowColumn>
-                  <TableRowColumn>{this.findTeacher(key)}</TableRowColumn>
+                  <TableRowColumn>{value.name}</TableRowColumn>
+                  <TableRowColumn>{value.admins !== undefined && Object.entries(value.admins).map(([, name]) => name)}</TableRowColumn>
+                  <TableRowColumn>{value.teachers !== undefined && Object.entries(value.teachers).map(([, name]) => name)}</TableRowColumn>
                   <TableRowColumn style={{ cursor: 'pointer', alignItems: 'center', display: 'flex' }} onTouchTap={() => this.props.history.push(`/admin/schools/edit/${key}`)}>Editar <FontIcon className="material-icons" >edit</FontIcon></TableRowColumn>
                 </TableRow>
               ))}

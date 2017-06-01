@@ -11,31 +11,18 @@ export default class ViewMessages extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      users: {},
-      schools: {},
       messages: {},
+      loading: false,
     };
   }
 
   componentWillMount() {
     const { database } = this.props;
-    database.child('users').on('value', users => this.setState({ users: users.val() }));
-    database.child('schools').on('value', schools => this.setState({ schools: schools.val() }));
-    database.child('messages').on('value', schools => this.setState({ messages: schools.val() }));
-  }
-
-  findTeacher(key) {
-    const { users, messages } = this.state;
-    return messages[key].teachers !== undefined ? Object.entries(messages[key].teachers).map(([teacher]) => <p key={teacher}>{users[teacher].nombre}</p>) : '';
-  }
-
-  findAdmin(key) {
-    const { users, messages } = this.state;
-    return messages[key].admins !== undefined ? Object.entries(messages[key].admins).map(([admin]) => <p key={admin}>{users[admin].nombre}</p>) : '';
+    database.child('messages').on('value', schools => this.setState({ messages: schools.val() || {} }));
   }
 
   render() {
-    const { messages, schools } = this.state;
+    const { messages } = this.state;
     return (
       <div>
         <Paper style={{ margin: '5%', padding: '3%' }} zDepth={4} >
@@ -48,18 +35,16 @@ export default class ViewMessages extends Component {
           <Table>
             <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
               <TableRow>
-                <TableHeaderColumn colSpan="8" tooltip="Tabla de Usuarios" style={{ textAlign: 'center' }}>
+                <TableHeaderColumn colSpan="6" tooltip="Tabla de Usuarios" style={{ textAlign: 'center' }}>
                   Tabla de Avisos
                 </TableHeaderColumn>
               </TableRow>
               <TableRow>
                 <TableHeaderColumn tooltip="Titulo del Aviso">Titulo</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Nombre del Aviso">Colegio</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Administradores son usuarios que pueden ver todos los mensajes del colegio">Fecha de Creacion</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Administradores son usuarios que pueden ver todos los mensajes del colegio">Fecha de Edicion</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Administradores son usuarios que pueden ver todos los mensajes del colegio">Administradores</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Profesores solo pueden ver sus mensajes">Profesores</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Profesores solo pueden ver sus mensajes">Mensaje</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Fecha de cuando se creo el aviso">Fecha de Creacion</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Fecha de cuando se edito por ultima vez el aviso">Fecha de Edicion</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Nombre de usuario y tipo">Usuario</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Editar">Editar</TableHeaderColumn>
               </TableRow>
             </TableHeader>
@@ -67,12 +52,10 @@ export default class ViewMessages extends Component {
               {Object.entries(messages).map(([key, value]) => (
                 <TableRow key={key}>
                   <TableRowColumn>{value.title}</TableRowColumn>
-                  <TableRowColumn>{schools[value.school] && schools[value.school].nombre}</TableRowColumn>
+                  <TableRowColumn>{value.schoolName}</TableRowColumn>
                   <TableRowColumn>{value.createDate}</TableRowColumn>
                   <TableRowColumn>{value.editDate}</TableRowColumn>
-                  <TableRowColumn>{this.findTeacher(key)}</TableRowColumn>
-                  <TableRowColumn>{this.findAdmin(key)}</TableRowColumn>
-                  <TableRowColumn>{value.text}</TableRowColumn>
+                  <TableRowColumn><FontIcon className="material-icons" >{value.admin ? 'assignment_ind' : 'face'}</FontIcon>{value.userName}</TableRowColumn>
                   <TableRowColumn style={{ cursor: 'pointer', alignItems: 'center', display: 'flex' }} onTouchTap={() => this.props.history.push(`/admin/messages/edit/${key}`)}>Editar <FontIcon className="material-icons" >edit</FontIcon></TableRowColumn>
                 </TableRow>
               ))}

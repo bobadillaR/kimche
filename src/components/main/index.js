@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
 import CircularProgress from 'material-ui/CircularProgress';
-import RaisedButton from 'material-ui/RaisedButton';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import FontIcon from 'material-ui/FontIcon';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-
 import Aviso from './aviso';
 import ViewAviso from './viewAviso';
 
@@ -15,58 +13,79 @@ export default class Main extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      messages: {},
+      messagesKey: [],
       expand: false,
       loading: false,
       alert: false,
       tab: true,
       schools: {},
-      schoolsList: {},
-      schoolMessages: {},
+      update: true,
+      admin: false,
+      teacherSelecter: '',
+      userSelectedMessages: [],
     };
   }
 
-  componentWillReceiveProps() {
-    const { database, userData } = this.props;
-    if (userData.admins !== undefined) {
-      this.setState({ loading: true });
-      database.child('schools').on('value', data =>
+  componentWillMount() {
+    const { userData, database } = this.props;
+    if (userData !== null && userData.schools !== undefined) {
+      const dataMessages = Object.keys(userData.schools[Object.keys(userData.schools)[0]].messages);
+      if (Object.values(userData.schools)[0].admin) {
+        database.child('schools').child(Object.keys(userData.schools)[0]).on('value', data =>
+          this.setState({
+            messagesKey: dataMessages,
+            admin: true,
+            school: Object.keys(userData.schools)[0],
+            users: Object.assign({}, data.val().admins, data.val().teachers),
+          }),
+        );
+      } else {
         this.setState({
-          schools: Object.entries(userData.admins).map(([schoolId]) => data.val()[schoolId]),
-          schoolsKey: Object.entries(userData.admins).map(([schoolId]) => schoolId),
-          loading: false,
-        }),
-      );
-    }
-    if (userData.messages !== undefined) {
-      this.setState({ loading: true });
-      database.child('messages').on('value', data =>
-        this.setState({
-          messages: Object.entries(userData.messages).map(([messageId]) => data.val()[messageId]),
-          messagesKey: Object.entries(userData.messages).map(([messageId]) => messageId),
-          loading: false,
-        }),
-      );
+          messagesKey: dataMessages,
+          admin: false,
+          school: Object.keys(userData.schools)[0],
+        });
+      }
     }
   }
 
-  selectSchool(key, school) {
+  componentWillReceiveProps() {
+    const { userData, database } = this.props;
+    const { update } = this.state;
+    if (update && userData !== null && userData.schools !== undefined) {
+      const dataMessages = Object.keys(userData.schools[Object.keys(userData.schools)[0]].messages);
+      if (Object.values(userData.schools)[0].admin) {
+        database.child('schools').child(Object.keys(userData.schools)[0]).on('value', data =>
+          this.setState({
+            update: false,
+            messagesKey: dataMessages,
+            admin: true,
+            school: Object.keys(userData.schools)[0],
+            users: Object.assign({}, data.val().admins, data.val().teachers),
+          }),
+        );
+      } else {
+        this.setState({
+          update: false,
+          messagesKey: dataMessages,
+          admin: false,
+          school: Object.keys(userData.schools)[0],
+        });
+      }
+    }
+  }
+
+  selectUser(userKey) {
     const { database } = this.props;
-    const { schools } = this.state;
-    this.setState({ schoolSelected: key });
+    const { school } = this.state;
     this.setState({ loading: true });
-    database.child('messages').on('value', data =>
-      this.setState({
-        schoolMessages: Object.entries(schools[school].messages).map(([messageId]) => data.val()[messageId]),
-        schoolMessagesKey: Object.entries(schools[school].messages).map(([messageId]) => messageId),
-        loading: false,
-      }),
+    database.child(`users/${userKey}/schools/${school}/messages`).on('value', data =>
+      this.setState({ loading: false, userSelectedMessages: Object.keys(data.val()), teacherSelecter: userKey }),
     );
   }
 
   render() {
-    const { database } = this.props;
-    const { messages, messagesKey, loading, tab, schools, schoolsKey, schoolSelected, schoolMessages, schoolMessagesKey } = this.state;
+    const { loading, tab, messagesKey, teacherSelecter, admin, users, userSelectedMessages } = this.state;
     return (
       <div>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -75,35 +94,54 @@ export default class Main extends Component {
               icon={<FontIcon className="material-icons">chat</FontIcon>}
               label="Mis Avisos"
             />
-            <Tab
-              icon={<FontIcon className="material-icons">question_answer</FontIcon>}
-              label="Avisos Profesores"
-            />
+            {admin &&
+              <Tab
+                icon={<FontIcon className="material-icons">question_answer</FontIcon>}
+                label="Avisos Profesores"
+              />
+            }
           </Tabs>
         </div>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <Paper style={{ width: '95%', padding: 10 }}>
-            <div>
-              {loading && <center><CircularProgress /></center>}
-              {tab ?
-                <div>
-                  <center><h2>Mis Avisos</h2></center>
-                  <hr />
-                  {Object.entries(messages).map(([id, message]) => <Aviso message={message} id={id} messagesKey={messagesKey[id]} {...this.props} />)}
-                </div>
-                :
-                <div>
-                  <center><h2>Avisos Profesores</h2></center>
-                  <hr />
-                  <SelectField value={schoolSelected} hintText="Selecciona un colegio" floatingLabelText="Colegio" onChange={(event, textoVal, key) => this.selectSchool(key, textoVal)} fullWidth >
-                    {Object.entries(schools).map(([key, school]) =>
-                      <MenuItem key={school.nombre} value={schoolsKey[key]} primaryText={school.nombre} />,
+            {loading ?
+              <center><CircularProgress /></center>
+            :
+              <div>
+                {tab ?
+                  <div>
+                    <hr />
+                    {messagesKey.map(message => <Aviso key={message} messageKey={message} {...this.props} />)}
+                    {messagesKey.length === 0 &&
+                      <Paper style={{ width: '95%', padding: 10 }}>
+                        <h4>No tienes Mensajes Aun</h4>
+                      </Paper>
+                    }
+                  </div>
+                  :
+                  <div>
+                    <hr />
+                    <h3>Selecciona un usuario</h3>
+                    <div style={{ alignItems: 'center', display: 'flex' }}>
+                      <FontIcon style={{ marginRight: '2%' }} className="material-icons" >face</FontIcon>
+                      <SelectField value={teacherSelecter} floatingLabelFixed hintText="Selecciona un profesor" floatingLabelText="Profesor" onChange={(event, textoVal, key) => this.selectUser(key)} fullWidth >
+                        {Object.entries(users).map(([id, teacher]) =>
+                          <MenuItem key={id} value={id} primaryText={teacher} />,
+                        )}
+                      </SelectField>
+                    </div>
+                    {userSelectedMessages.map(message =>
+                      <ViewAviso key={message} messageKey={message} {...this.props} />,
                     )}
-                  </SelectField>
-                  {Object.entries(schoolMessages).map(([id, message]) => <ViewAviso message={message} id={id} database={database} messagesKey={schoolMessagesKey[id]} />)}
-                </div>
-              }
-            </div>
+                    {teacherSelecter !== '' && userSelectedMessages.length === 0 &&
+                      <Paper style={{ width: '95%', padding: 10 }}>
+                        <h4>No tienes Mensajes Aun</h4>
+                      </Paper>
+                    }
+                  </div>
+                }
+              </div>
+            }
           </Paper>
         </div>
       </div>

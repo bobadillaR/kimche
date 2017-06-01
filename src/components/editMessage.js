@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import moment from 'moment';
 
 import TextField from 'material-ui/TextField';
@@ -10,10 +10,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import CircularProgress from 'material-ui/CircularProgress';
 import Checkbox from 'material-ui/Checkbox';
-
-import ActionFavorite from 'material-ui/svg-icons/action/visibility';
-import ActionFavoriteBorder from 'material-ui/svg-icons/action/visibility-off';
-
+import { cyan500, red500 } from 'material-ui/styles/colors';
 
 import Message from './utilities/message';
 
@@ -22,153 +19,135 @@ export default class EditMessage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      errorNombre: false,
+      errorSchool: false,
+      errorTitle: false,
+      errorType: false,
       texto: '',
       alert: false,
-      users: {},
-      schools: {},
-      schoolId: '',
+      schools: '',
+      school: '',
+      tipo: '',
       initialUser: false,
       teachers: [],
-      teachersList: [],
       admins: [],
-      adminsList: [],
       tipoList: { felicitar: 'Felicitar', apoyar: 'Apoyar', corregir: 'Corregir', conservar: 'Conservar', soporte: 'Soporte' },
       title: '',
-      visible: true,
+      visibility: true,
+      userId: '',
+      redirect: false,
     };
   }
 
   componentWillMount() {
     const { editable, database } = this.props;
-    const messageId = this.props.match.params.messageId;
-    this.setState({ messageId, loading: true });
-    database.child('users').on('value', users => this.setState({ users: users.val() }));
+    this.setState({ loading: true });
     database.child('schools').on('value', (schools) => {
       this.setState({ schools: schools.val() });
       if (editable) {
-        database.child('messages').child(this.props.match.params.messageId).on('value', (message) => {
+        const messageId = this.props.match.params.messageId;
+        database.child('messages').child(messageId).on('value', (message) => {
           this.setState({
             messageId,
-            texto: message.val().text,
-            tipo: message.val().tipo,
-            title: message.val().title,
-            school: message.val().school,
-            oldSchool: message.val().school,
-            teachers: message.val().teachers !== undefined ? Object.entries(message.val().teachers).map(([key]) => key) : [],
-            initialTeacher: message.val().teachers !== undefined ? Object.entries(message.val().teachers).map(([key]) => key) : [],
-            admins: message.val().admins !== undefined ? Object.entries(message.val().admins).map(([key]) => key) : [],
-            initialAdmin: message.val().admins !== undefined ? Object.entries(message.val().admins).map(([key]) => key) : [],
+            texto: message.val().text || '',
+            tipo: message.val().tipo || '',
+            title: message.val().title || '',
+            school: message.val().schoolId || '',
+            teachers: !message.val().admin ? message.val().userId : '',
+            admins: message.val().admin ? message.val().userId : '',
             loading: false,
+            message: message.val() || '',
+            userId: message.val().userId || '',
           });
         });
       } else this.setState({ loading: false });
     });
   }
 
-  componentDidMount() {
-    const { editable } = this.props;
-    const { school } = this.state;
-    if (editable) {
-      this.findUsers(school);
-    }
-  }
-
   create() {
     const { database } = this.props;
-    const { texto, admins, teachers, school, tipo, title, visible } = this.state;
+    const { texto, admins, teachers, school, tipo, title, schools } = this.state;
     if (texto && school && tipo) {
       this.setState({ loading: true });
       const update = {};
-      const messageKey = database.child('school').push().key;
-      update[`messages/${messageKey}/title`] = title;
-      update[`messages/${messageKey}/visible`] = visible;
-      update[`messages/${messageKey}/text`] = texto;
-      update[`messages/${messageKey}/tipo`] = tipo;
-      update[`schools/${school}/messages/${messageKey}`] = true;
-      update[`messages/${messageKey}/school`] = school;
-      update[`messages/${messageKey}/createDate`] = moment().format('DD-MM-YYYY, h:mm a');
+      let messageKey = '';
       teachers.forEach((userKey) => {
-        update[`users/${userKey}/teachers/${school}/${messageKey}`] = true;
-        update[`messages/${messageKey}/teachers/${userKey}/state`] = 0;
-        update[`messages/${messageKey}/teachers/${userKey}/editDate`] = moment().format('DD-MM-YYYY, h:mm a');
+        messageKey = database.child('school').push().key;
+        update[`messages/${messageKey}/title`] = title;
+        update[`messages/${messageKey}/text`] = texto;
+        update[`messages/${messageKey}/tipo`] = tipo;
+        update[`messages/${messageKey}/state`] = 0;
+        update[`messages/${messageKey}/admin`] = false;
+        update[`messages/${messageKey}/visibility`] = true;
+        update[`messages/${messageKey}/createDate`] = moment().format('DD-MM-YYYY, h:mm a');
+        update[`messages/${messageKey}/editDate`] = moment().format('DD-MM-YYYY, h:mm a');
+        update[`schools/${school}/messages/${messageKey}`] = title;
+        update[`users/${userKey}/schools/${school}/messages/${messageKey}`] = title;
+        update[`messages/${messageKey}/schoolId`] = school;
+        update[`messages/${messageKey}/schoolName`] = schools[school].name;
+        update[`messages/${messageKey}/userId`] = userKey;
+        update[`messages/${messageKey}/userName`] = schools[school].teachers[userKey];
       });
       admins.forEach((userKey) => {
-        update[`users/${userKey}/admins/${school}/${messageKey}`] = true;
-        update[`messages/${messageKey}/admins/${userKey}/state`] = 0;
-        update[`messages/${messageKey}/admins/${userKey}/editDate`] = moment().format('DD-MM-YYYY, h:mm a');
+        messageKey = database.child('school').push().key;
+        update[`messages/${messageKey}/title`] = title;
+        update[`messages/${messageKey}/text`] = texto;
+        update[`messages/${messageKey}/tipo`] = tipo;
+        update[`messages/${messageKey}/state`] = 0;
+        update[`messages/${messageKey}/admin`] = true;
+        update[`messages/${messageKey}/visibility`] = true;
+        update[`messages/${messageKey}/createDate`] = moment().format('DD-MM-YYYY, h:mm a');
+        update[`messages/${messageKey}/editDate`] = moment().format('DD-MM-YYYY, h:mm a');
+        update[`schools/${school}/messages/${messageKey}`] = title;
+        update[`users/${userKey}/schools/${school}/messages/${messageKey}`] = title;
+        update[`messages/${messageKey}/schoolId`] = school;
+        update[`messages/${messageKey}/schoolName`] = schools[school].name;
+        update[`messages/${messageKey}/userId`] = userKey;
+        update[`messages/${messageKey}/userName`] = schools[school].admins[userKey];
       });
       database.update(update)
-      .then(this.setState({ loading: false, alert: true }));
-    }
+      .then(this.setState({ loading: false, alert: true, texto: '', title: '', school: '', teachers: [], admins: [], tipo: '' }));
+    } if (title === '') this.setState({ errorTitle: true });
+    if (school === '') this.setState({ errorSchool: true });
+    if (tipo === '') this.setState({ errorType: true });
   }
 
   edit() {
     const { database } = this.props;
-    const { texto, admins, teachers, school, tipo, initialAdmin, initialTeacher, messageId, oldSchool, title, visible } = this.state;
+    const { texto, school, tipo, messageId, title, visibility, message } = this.state;
     if (texto && school && tipo) {
       this.setState({ loading: true });
       const update = {};
-      update[`messages/${messageId}/state`] = 0;
       update[`messages/${messageId}/title`] = title;
-      update[`messages/${messageId}/visible`] = visible;
+      update[`messages/${messageId}/visibility`] = visibility;
       update[`messages/${messageId}/text`] = texto;
       update[`messages/${messageId}/tipo`] = tipo;
-      update[`schools/${school}/messages/${messageId}`] = true;
-      if (oldSchool !== school) {
+      if (message.school !== school) {
         update[`messages/${messageId}/school`] = school;
-        update[`schools/${oldSchool}/message`] = null;
+        update[`schools/${message.school}/message/${messageId}`] = null;
       }
-      const oldTeachers = [];
-      const newTeachers = [];
-      const oldAdmins = [];
-      const newAdmins = [];
-
-      if (initialTeacher.length > 0) initialTeacher.forEach((auxOldTeacher) => { if (teachers.indexOf(auxOldTeacher) < 0) oldTeachers.push(auxOldTeacher); });
-      if (initialAdmin.length > 0) initialAdmin.forEach((auxOldAdmin) => { if (admins.indexOf(auxOldAdmin) < 0) oldAdmins.push(auxOldAdmin); });
-      if (teachers.length > 0) teachers.forEach((auxNewTeacher) => { if (initialTeacher.indexOf(auxNewTeacher) < 0) newTeachers.push(auxNewTeacher); });
-      if (admins.length > 0) admins.forEach((auxNewAdmin) => { if (initialAdmin.indexOf(auxNewAdmin) < 0) newAdmins.push(auxNewAdmin); });
-
-      oldTeachers.forEach((oldTeacher) => {
-        update[`messages/${messageId}/teachers/${oldTeacher}`] = null;
-        update[`users/${oldTeacher}/teachers/${messageId}`] = null;
-      });
-      newTeachers.forEach((newTeacher) => {
-        update[`users/${newTeacher}/teachers/${school}/${messageId}`] = true;
-        update[`messages/${messageId}/teachers/${newTeacher}/state`] = 0;
-        update[`messages/${messageId}/teachers/${newTeacher}/editDate`] = moment().format('DD-MM-YYYY, h:mm a');
-      });
-      oldAdmins.forEach((oldAdmin) => {
-        update[`messages/${messageId}/admins/${oldAdmin}`] = null;
-        update[`users/${oldAdmin}/admins/${messageId}`] = null;
-      });
-      newAdmins.forEach((newAdmin) => {
-        update[`users/${newAdmin}/admins/${school}/${messageId}`] = true;
-        update[`messages/${messageId}/admins/${newAdmin}/state`] = 0;
-        update[`messages/${messageId}/admins/${newAdmin}/editDate`] = moment().format('DD-MM-YYYY, h:mm a');
-      });
       database.update(update)
-      .then(this.setState({ loading: false, alert: true }));
-    }
-    this.setState({ loading: false });
+      .then(this.setState({ loading: false, alert: true, texto: '', title: '' }));
+    } if (title === '') this.setState({ errorTitle: true });
+    if (school === '') this.setState({ errorSchool: true });
+    if (tipo === '') this.setState({ errorType: true });
   }
 
-  findUsers(value) {
-    const { users, schools } = this.state;
-    const adminsList = {};
-    const teachersList = {};
-    Object.entries(schools[value].admins).forEach(([key]) => adminsList[key] = users[key]);
-    Object.entries(schools[value].teachers).forEach(([key]) => teachersList[key] = users[key]);
-    this.setState({
-      school: value,
-      teachersList,
-      adminsList,
-    });
+  delete() {
+    const { database } = this.props;
+    const { school, messageId, userId } = this.state;
+    const update = {};
+    this.setState({ loading: true });
+    update[`messages/${messageId}`] = null;
+    update[`schools/${school}/messages/${messageId}`] = null;
+    update[`users/${userId}/schools/${school}/messages/${messageId}`] = null;
+    database.update(update)
+    .then(this.setState({ redirect: '/admin/messages' }));
   }
 
   render() {
-    const { loading, errorNombre, alert, texto, admins, school, teachers, schools, teachersList, adminsList, tipoList, tipo, title, errorTitle, visible } = this.state;
+    const { redirect, loading, errorTitle, alert, texto, admins, school, teachers, schools, tipoList, tipo, title, visibility, errorType, errorSchool } = this.state;
     const { editable } = this.props;
+    if (redirect) return <Redirect to={redirect} />;
     return (
       <div>
         <Paper style={{ margin: '5%', padding: '3%' }} zDepth={4}>
@@ -186,54 +165,65 @@ export default class EditMessage extends Component {
           </div>
           <div style={{ alignItems: 'center', display: 'flex' }}>
             <FontIcon style={{ marginRight: '2%' }} className="material-icons" >message</FontIcon>
-            <TextField value={texto} hintText="Texto del aviso" floatingLabelText="Texto" onChange={(event, textoVal) => this.setState({ texto: textoVal })} fullWidth errorText={errorNombre && 'Campo obligatorio'} />
+            <TextField multiLine rows={2} value={texto} hintText="Texto del aviso" floatingLabelText="Texto" onChange={(event, textoVal) => this.setState({ texto: textoVal })} fullWidth />
           </div>
           <div style={{ alignItems: 'center', display: 'flex' }}>
             <FontIcon style={{ marginRight: '2%' }} className="material-icons" >school</FontIcon>
-            <SelectField value={school} hintText="Nombre del colegio" floatingLabelText="Colegio" onChange={(event, index, value) => this.findUsers(value)} fullWidth >
+            <SelectField value={school} disabled={editable} hintText="Nombre del colegio" floatingLabelText="Colegio" onChange={(event, index, value) => this.setState({ school: value })} fullWidth errorText={errorSchool && 'Campo obligatorio'}>
               {Object.entries(schools).map(([key, value]) => (
-                <MenuItem key={key} value={key} primaryText={value.nombre} />
+                <MenuItem key={key} value={key} primaryText={value.name} />
               ))}
             </SelectField>
           </div>
           <div style={{ alignItems: 'center', display: 'flex' }}>
             <FontIcon style={{ marginRight: '2%' }} className="material-icons" >assignment_ind</FontIcon>
-            <SelectField multiple value={admins} disabled={adminsList.length === 0} hintText="Administradores del colegio" floatingLabelText="Administradores" onChange={(event, index, value) => this.setState({ admins: value })} fullWidth >
-              {Object.entries(adminsList).map(([key, value]) =>
-                <MenuItem key={key} value={key} primaryText={value.nombre} />,
+            <SelectField multiple value={admins} disabled={schools[school] === undefined || editable} hintText="Administradores del colegio" floatingLabelText="Administradores" onChange={(event, index, value) => this.setState({ admins: value })} fullWidth >
+              {schools[school] !== undefined && schools[school].admins !== undefined &&
+                Object.entries(schools[school].admins).map(([key, value]) =>
+                  <MenuItem key={key} value={key} primaryText={value} checked={admins.indexOf(key) > -1} />,
               )}
             </SelectField>
 
           </div>
           <div style={{ alignItems: 'center', display: 'flex' }}>
             <FontIcon style={{ marginRight: '2%' }} className="material-icons" >face</FontIcon>
-            <SelectField multiple value={teachers} disabled={teachersList.length === 0} floatingLabelFixed hintText="Profesores del colegio" floatingLabelText="Profesores" onChange={(event, index, value) => this.setState({ teachers: value })} fullWidth >
-              {Object.entries(teachersList).map(([key, value]) =>
-                <MenuItem key={key} value={key} primaryText={value.nombre} />,
+            <SelectField multiple value={teachers} disabled={schools[school] === undefined || editable} floatingLabelFixed hintText="Profesores del colegio" floatingLabelText="Profesores" onChange={(event, index, value) => this.setState({ teachers: value })} fullWidth >
+              {schools[school] !== undefined && schools[school].teachers !== undefined &&
+                Object.entries(schools[school].teachers).map(([key, value]) =>
+                  <MenuItem key={key} value={key} primaryText={value} checked={teachers.indexOf(key) > -1} />,
               )}
             </SelectField>
           </div>
           <div style={{ alignItems: 'center', display: 'flex' }}>
             <FontIcon style={{ marginRight: '2%' }} className="material-icons" >feedback</FontIcon>
-            <SelectField value={tipo} floatingLabelFixed hintText="Tipo de aviso" floatingLabelText="Tipo" onChange={(event, index, value) => this.setState({ tipo: value })} fullWidth >
+            <SelectField value={tipo} floatingLabelFixed hintText="Tipo de aviso" floatingLabelText="Tipo" onChange={(event, index, value) => this.setState({ tipo: value })} fullWidth errorText={errorType && 'Campo obligatorio'}>
               {Object.entries(tipoList).map(([key, value]) =>
                 <MenuItem key={key} value={key} primaryText={value} />,
               )}
             </SelectField>
           </div>
           <br />
-          <Checkbox
-            checkedIcon={<ActionFavorite />}
-            uncheckedIcon={<ActionFavoriteBorder />}
-            label={`${!visible ? 'No es' : 'Es'} Visible`}
-            onCheck={(event, visibleValue) => this.setState({ visible: visibleValue })}
-            labelStyle={{ marginLeft: '1%' }}
-            checked={visible}
-          />
+          {editable &&
+            <Checkbox
+              checkedIcon={<FontIcon style={{ marginRight: '2%' }} color={cyan500} className="material-icons" >visibility</FontIcon>}
+              uncheckedIcon={<FontIcon style={{ marginRight: '2%' }} className="material-icons" >visibility_off</FontIcon>}
+              label={`${!visibility ? 'No es' : 'Es'} Visible`}
+              onCheck={(event, adminValue) => this.setState({ visibility: adminValue })}
+              labelStyle={{ marginLeft: '1%' }}
+              checked={visibility}
+            />
+          }
           <br />
           <RaisedButton style={{ float: 'right' }} primary disabled={loading} icon={<FontIcon className="material-icons" >{editable ? 'edit' : 'add_circle'}</FontIcon>} label={editable ? 'Editar Aviso' : 'Crear Aviso'} onTouchTap={() => { if (editable) this.edit(); else this.create(); }} />
           <br />
           <br />
+          {editable &&
+            <div>
+              <br />
+              <RaisedButton backgroundColor={red500} style={{ float: 'right' }} icon={<FontIcon className="material-icons" >delete</FontIcon>} label="Eliminar Mensaje" onTouchTap={() => this.delete()} />
+              <br />
+            </div>
+          }
         </Paper>
       </div>
     );

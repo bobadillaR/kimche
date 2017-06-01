@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-
 import './vendor/font-awesome/css/font-awesome.min.css';
 import './css/agency.min.css';
 import './vendor/bootstrap/css/bootstrap.css';
@@ -12,19 +10,18 @@ export default class LandingPage extends Component {
     super(props);
     this.state = {};
   }
-
+// eslint-disable-next-line no-alert
   render() {
-    const { user, userData } = this.props;
     return (
       <div>
-        <nav className="navbar fixed-top navbar-toggleable-md navbar-inverse" id="mainNav">
+        {/* <nav className="navbar fixed-top navbar-toggleable-md navbar-inverse" id="mainNav">
           <div className="container">
             <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
               Menu
               <i className="fa fa-bars" />
             </button>
             <Link to="/">
-              <img className="img-fluid d-block mx-auto" src={require('./img/logo.png')} alt="" />
+              <img alt="das" className="img-fluid d-block mx-auto" src={require('./img/logo.png')} alt="" />
             </Link>
             <div className="collapse navbar-collapse" id="navbarResponsive">
               <ul className="navbar-nav ml-auto">
@@ -45,13 +42,13 @@ export default class LandingPage extends Component {
               </ul>
             </div>
           </div>
-        </nav>
+        </nav> */}
 
         <header className="masthead">
           <div className="container">
             <div className="intro-text">
-              <div className="intro-lead-in">Información que transforma</div>
               <div className="intro-heading">K I M C H E</div>
+              <div className="intro-lead-in">Información que transforma</div>
               <a href="#services" className="btn btn-xl">¡empecemos!</a>
             </div>
           </div>
@@ -107,7 +104,7 @@ export default class LandingPage extends Component {
                 <ul className="timeline">
                   <li>
                     <div className="timeline-image">
-                      <img className="rounded-circle img-fluid" src={require('./img/about/1.png')} />
+                      <img alt="das" className="rounded-circle img-fluid" src={require('./img/about/1.png')} />
                     </div>
                     <div className="timeline-panel">
                       <div className="timeline-heading">
@@ -121,7 +118,7 @@ export default class LandingPage extends Component {
                   </li>
                   <li className="timeline-inverted">
                     <div className="timeline-image">
-                      <img className="rounded-circle img-fluid" src={require('./img/about/2.jpg')} />
+                      <img alt="das" className="rounded-circle img-fluid" src={require('./img/about/2.jpg')} />
                     </div>
                     <div className="timeline-panel">
                       <div className="timeline-heading">
@@ -135,7 +132,7 @@ export default class LandingPage extends Component {
                   </li>
                   <li>
                     <div className="timeline-image">
-                      <img className="rounded-circle img-fluid" src={require('./img/about/3.jpg')} />
+                      <img alt="das" className="rounded-circle img-fluid" src={require('./img/about/3.jpg')} />
                     </div>
                     <div className="timeline-panel">
                       <div className="timeline-heading">
@@ -150,7 +147,7 @@ export default class LandingPage extends Component {
                   </li>
                   <li className="timeline-inverted">
                     <div className="timeline-image">
-                      <img className="rounded-circle img-fluid" src={require('./img/about/4.jpg')}/>
+                      <img alt="das" className="rounded-circle img-fluid" src={require('./img/about/4.jpg')}/>
                     </div>
                     <div className="timeline-panel">
                       <div className="timeline-heading">
@@ -187,18 +184,18 @@ export default class LandingPage extends Component {
             </div>
             <div className="row">
               <div className="col-md-4 col-sm-8">
-                <a href="#">
-                  <img className="img-fluid d-block mx-auto" src={require('./img/logos/designmodo.jpg')} />
+                <a>
+                  <img alt="das" className="img-fluid d-block mx-auto" src={require('./img/logos/designmodo.jpg')} />
                 </a>
               </div>
               <div className="col-md-4 col-sm-8">
-                <a href="#">
-                  <img className="img-fluid d-block mx-auto" src={require('./img/logos/themeforest.jpg')} />
+                <a>
+                  <img alt="das" className="img-fluid d-block mx-auto" src={require('./img/logos/themeforest.jpg')} />
                 </a>
               </div>
               <div className="col-md-4 col-sm-8">
-                <a href="#">
-                  <img className="img-fluid d-block mx-auto" src={require('./img/logos/envato.jpg')} />
+                <a>
+                  <img alt="das" className="img-fluid d-block mx-auto" src={require('./img/logos/envato.jpg')} />
                 </a>
               </div>
             </div>

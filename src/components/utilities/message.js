@@ -55,9 +55,9 @@ export default class Message extends Component {
     return (
       <div>
         {visible &&
-          <Paper style={{ backgroundColor: this.tipoColor(), marginTop: 10, marginBottom: 10, alignItems: 'center', display: 'flex' }} zDepth={1} >
-            <FontIcon style={{ marginLeft: '5%' }} className="material-icons">{this.tipoIcon()}</FontIcon>
-            <p style={{ marginLeft: '5%', marginRight: '2%' }}>{message}</p>
+          <Paper style={{ backgroundColor: this.tipoColor(), marginTop: 10, marginBottom: 10, alignItems: 'center', display: 'flex', paddingRight: '2%', padding: 5 }} zDepth={1} >
+            <FontIcon style={{ marginLeft: '5%', marginRight: '5%' }} className="material-icons">{this.tipoIcon()}</FontIcon>
+            {message}
           </Paper>
         }
       </div>
