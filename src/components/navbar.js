@@ -11,6 +11,8 @@ import MenuItem from 'material-ui/MenuItem';
 import CircularProgress from 'material-ui/CircularProgress';
 import Divider from 'material-ui/Divider';
 import { cyan500 } from 'material-ui/styles/colors';
+import Dialog from 'material-ui/Dialog';
+import TextField from 'material-ui/TextField';
 
 import logo from '../components/landingPage/img/logo.png';
 
@@ -19,7 +21,20 @@ class Navbar extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      openSupport: false,
+      supportText: '',
     };
+  }
+
+  sendEmail() {
+    const { database, user, userData } = this.props;
+    const { supportText } = this.state;
+    database.child('support').push({
+      userId: user.uid,
+      name: userData.name,
+      text: supportText,
+      mail: user.email,
+    }).then(() => this.setState({ openSupport: false }));
   }
 
   renderMain() {
@@ -92,6 +107,8 @@ class Navbar extends Component {
         >
           <MenuItem primaryText={userData !== null && userData.name} rightIcon={<FontIcon className="material-icons">person</FontIcon>} />
           <Divider />
+          <MenuItem primaryText="Soporte" onTouchTap={() => this.setState({ openSupport: true })} rightIcon={<FontIcon className="material-icons">live_help</FontIcon>} />
+          <Divider />
           <MenuItem primaryText="Mi Usuario" onTouchTap={() => this.props.history.push('/myUser')} rightIcon={<FontIcon className="material-icons">settings</FontIcon>} />
           <MenuItem primaryText="Desconectarse" onTouchTap={() => { this.props.history.push('/'); this.props.onLogout(); }} rightIcon={<FontIcon className="material-icons">settings_power</FontIcon>} />
         </IconMenu>
@@ -120,6 +137,26 @@ class Navbar extends Component {
             </div>
           }
         </ToolbarGroup>
+        <Dialog
+          title="Soporte"
+          actions={[
+            <FlatButton label="Cerrar" primary onTouchTap={() => this.setState({ openSupport: false })} />,
+            <FlatButton label="Enviar" primary onTouchTap={() => this.sendEmail()} />,
+          ]}
+          modal={false}
+          open={this.state.openSupport}
+          onRequestClose={() => this.setState({ openSupport: false })}
+        >
+          <p>Envianos un mensaje para ayudarte: </p>
+          <TextField
+            hintText="Mensaje"
+            multiLine
+            rows={2}
+            rowsMax={4}
+            fullWidth
+            onChange={(event, value) => this.setState({ supportText: value })}
+          /><br />
+        </Dialog>
       </Toolbar>
     );
   }

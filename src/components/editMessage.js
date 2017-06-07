@@ -11,6 +11,9 @@ import MenuItem from 'material-ui/MenuItem';
 import CircularProgress from 'material-ui/CircularProgress';
 import Checkbox from 'material-ui/Checkbox';
 import { cyan500, red500 } from 'material-ui/styles/colors';
+import IconButton from 'material-ui/IconButton';
+
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 
 import Message from './utilities/message';
 
@@ -35,6 +38,8 @@ export default class EditMessage extends Component {
       visibility: true,
       userId: '',
       redirect: false,
+      table: [],
+      tableTitle: '',
     };
   }
 
@@ -57,6 +62,8 @@ export default class EditMessage extends Component {
             loading: false,
             message: message.val() || '',
             userId: message.val().userId || '',
+            table: message.val().table || [],
+            tableTitle: message.val().tableTitle || '',
           });
         });
       } else this.setState({ loading: false });
@@ -65,7 +72,7 @@ export default class EditMessage extends Component {
 
   create() {
     const { database } = this.props;
-    const { texto, admins, teachers, school, tipo, title, schools } = this.state;
+    const { texto, admins, teachers, school, tipo, title, schools, table } = this.state;
     if (texto && school && tipo) {
       this.setState({ loading: true });
       const update = {};
@@ -76,12 +83,13 @@ export default class EditMessage extends Component {
         update[`messages/${messageKey}/text`] = texto;
         update[`messages/${messageKey}/tipo`] = tipo;
         update[`messages/${messageKey}/state`] = 0;
+        update[`messages/${messageKey}/table`] = table;
         update[`messages/${messageKey}/admin`] = false;
         update[`messages/${messageKey}/visibility`] = true;
-        update[`messages/${messageKey}/createDate`] = moment().format('DD-MM-YYYY, h:mm a');
-        update[`messages/${messageKey}/editDate`] = moment().format('DD-MM-YYYY, h:mm a');
-        update[`schools/${school}/messages/${messageKey}`] = title;
-        update[`users/${userKey}/schools/${school}/messages/${messageKey}`] = title;
+        update[`messages/${messageKey}/createDate`] = moment().unix();
+        update[`messages/${messageKey}/editDate`] = moment().unix();
+        update[`schools/${school}/messages/${messageKey}`] = moment().unix();
+        update[`users/${userKey}/schools/${school}/messages/${messageKey}`] = moment().unix();
         update[`messages/${messageKey}/schoolId`] = school;
         update[`messages/${messageKey}/schoolName`] = schools[school].name;
         update[`messages/${messageKey}/userId`] = userKey;
@@ -92,20 +100,21 @@ export default class EditMessage extends Component {
         update[`messages/${messageKey}/title`] = title;
         update[`messages/${messageKey}/text`] = texto;
         update[`messages/${messageKey}/tipo`] = tipo;
+        update[`messages/${messageKey}/table`] = table;
         update[`messages/${messageKey}/state`] = 0;
         update[`messages/${messageKey}/admin`] = true;
         update[`messages/${messageKey}/visibility`] = true;
-        update[`messages/${messageKey}/createDate`] = moment().format('DD-MM-YYYY, h:mm a');
-        update[`messages/${messageKey}/editDate`] = moment().format('DD-MM-YYYY, h:mm a');
-        update[`schools/${school}/messages/${messageKey}`] = title;
-        update[`users/${userKey}/schools/${school}/messages/${messageKey}`] = title;
+        update[`messages/${messageKey}/createDate`] = moment().unix();
+        update[`messages/${messageKey}/editDate`] = moment().unix();
+        update[`schools/${school}/messages/${messageKey}`] = moment().unix();
+        update[`users/${userKey}/schools/${school}/messages/${messageKey}`] = moment().unix();
         update[`messages/${messageKey}/schoolId`] = school;
         update[`messages/${messageKey}/schoolName`] = schools[school].name;
         update[`messages/${messageKey}/userId`] = userKey;
         update[`messages/${messageKey}/userName`] = schools[school].admins[userKey];
       });
       database.update(update)
-      .then(this.setState({ loading: false, alert: true, texto: '', title: '', school: '', teachers: [], admins: [], tipo: '' }));
+      .then(this.setState({ loading: false, alert: true, texto: '', title: '', school: '', teachers: [], admins: [], tipo: '', errorSchool: false, errorText: false, errorTitle: false, errorType: false, table: [], tableTitle: '' }));
     } if (title === '') this.setState({ errorTitle: true });
     if (school === '') this.setState({ errorSchool: true });
     if (tipo === '') this.setState({ errorType: true });
@@ -113,7 +122,7 @@ export default class EditMessage extends Component {
 
   edit() {
     const { database } = this.props;
-    const { texto, school, tipo, messageId, title, visibility, message } = this.state;
+    const { texto, school, tipo, messageId, title, visibility, message, table } = this.state;
     if (texto && school && tipo) {
       this.setState({ loading: true });
       const update = {};
@@ -121,12 +130,13 @@ export default class EditMessage extends Component {
       update[`messages/${messageId}/visibility`] = visibility;
       update[`messages/${messageId}/text`] = texto;
       update[`messages/${messageId}/tipo`] = tipo;
+      update[`messages/${messageId}/table`] = table;
       if (message.school !== school) {
         update[`messages/${messageId}/school`] = school;
         update[`schools/${message.school}/message/${messageId}`] = null;
       }
       database.update(update)
-      .then(this.setState({ loading: false, alert: true, texto: '', title: '' }));
+      .then(this.setState({ loading: false, alert: true }));
     } if (title === '') this.setState({ errorTitle: true });
     if (school === '') this.setState({ errorSchool: true });
     if (tipo === '') this.setState({ errorType: true });
@@ -145,7 +155,7 @@ export default class EditMessage extends Component {
   }
 
   render() {
-    const { redirect, loading, errorTitle, alert, texto, admins, school, teachers, schools, tipoList, tipo, title, visibility, errorType, errorSchool } = this.state;
+    const { redirect, loading, errorTitle, alert, texto, admins, school, teachers, schools, tipoList, tipo, title, visibility, errorType, errorSchool, table, tableTitle } = this.state;
     const { editable } = this.props;
     if (redirect) return <Redirect to={redirect} />;
     return (
@@ -202,6 +212,39 @@ export default class EditMessage extends Component {
               )}
             </SelectField>
           </div>
+          <div>
+            <hr />
+            <Table selectable={false} >
+              <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                <TableRow>
+                  <TableHeaderColumn colSpan="3" tooltip="Tabla de Datos" style={{ textAlign: 'center' }}>
+                    <TextField value={tableTitle} floatingLabelText="Titulo" hintText="Nombre de la tabla" onChange={(event, textoVal) => this.setState({ tableTitle: textoVal })} />
+                    <RaisedButton style={{ marginLeft: '10%' }} primary icon={<FontIcon className="material-icons" >add</FontIcon>} label="Agregar fila" onTouchTap={() => { table.push({ data: '', student: '' }); this.setState({ table }); }} />
+                  </TableHeaderColumn>
+                </TableRow>
+                <TableRow>
+                  <TableHeaderColumn tooltip="Nombre del alumno">Nombre</TableHeaderColumn>
+                  <TableHeaderColumn tooltip="Dato">Dato</TableHeaderColumn>
+                  <TableHeaderColumn tooltip="Eliminar">Eliminar</TableHeaderColumn>
+                </TableRow>
+              </TableHeader>
+              <TableBody showRowHover displayRowCheckbox={false}>
+                {table.map((data, key) =>
+                  (<TableRow>
+                    <TableRowColumn>
+                      <TextField value={data.student} hintText="Nombre del Alumno" onChange={(event, textoVal) => { table[key].student = textoVal; this.setState({ table }); }} fullWidth />
+                    </TableRowColumn>
+                    <TableRowColumn>
+                      <TextField value={data.data} hintText="Dato del Alumno" onChange={(event, textoVal) => { table[key].data = textoVal; this.setState({ table }); }} fullWidth />
+                    </TableRowColumn>
+                    <TableRowColumn>
+                      <IconButton onTouchTap={() => { table.splice(key, 1); this.setState({ table }); }}><FontIcon className="material-icons" >delete</FontIcon></IconButton>
+                    </TableRowColumn>
+                  </TableRow>),
+                )}
+              </TableBody>
+            </Table>
+          </div>
           <br />
           {editable &&
             <Checkbox
@@ -214,7 +257,7 @@ export default class EditMessage extends Component {
             />
           }
           <br />
-          <RaisedButton style={{ float: 'right' }} primary disabled={loading} icon={<FontIcon className="material-icons" >{editable ? 'edit' : 'add_circle'}</FontIcon>} label={editable ? 'Editar Aviso' : 'Crear Aviso'} onTouchTap={() => { if (editable) this.edit(); else this.create(); }} />
+          <RaisedButton style={{ float: 'right' }} primary disabled={loading} icon={<FontIcon className="material-icons" >{editable ? 'edit' : 'add_circle'}</FontIcon>} label={editable ? 'Guardar Aviso' : 'Crear Aviso'} onTouchTap={() => { if (editable) this.edit(); else this.create(); }} />
           <br />
           <br />
           {editable &&

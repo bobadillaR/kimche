@@ -64,11 +64,9 @@ export default class Login extends Component {
     return (
       <div style={{ display: 'flex', marginTop: '10%', justifyContent: 'center' }}>
         <Paper style={{ height: '50%', width: '75%', padding: 20 }} zDepth={2} >
-          <Paper style={{ padding: 20, backgroundColor: blueGrey200 }}>
-            <center>
-              <img alt="presentation" src={logo} height={60} />
-            </center>
-          </Paper>
+          <center>
+            <img alt="presentation" src={logo} height={60} />
+          </center>
           {recoveryView && <Message message="Agregue el mail de usuario para enviarle un mensaje con la informacion de recuperacion de contraseña" tipo="info" />}
           {messageRecovery && <Message message="Se ha enviado un mail para restablecer su contraseña" tipo="success" time={4000} />}
           <form onSubmit={e => this.login(e)}>

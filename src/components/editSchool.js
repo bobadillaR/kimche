@@ -71,7 +71,7 @@ export default class EditSchool extends Component {
       });
       update[`schools/${schoolKey}/name`] = name;
       update[`schools/${schoolKey}/visibility`] = visibility;
-      update[`schools/${schoolKey}/createDate`] = moment().format('DD-MM-YYYY, h:mm a');
+      update[`schools/${schoolKey}/createDate`] = moment().unix();
       database.update(update)
       .then(this.setState({ loading: false, alert: true, name: '' }));
     } else this.setState({ errorName: true });
@@ -135,7 +135,7 @@ export default class EditSchool extends Component {
       <div>
         <Paper style={{ margin: '5%', padding: '3%' }} zDepth={4}>
           <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between' }}>
-            <h1>{editable ? 'Editar' : 'Crear'} Colegio</h1>
+            <h1>{editable ? 'Guardar' : 'Crear'} Colegio</h1>
             <Link to="/admin/schools">
               <RaisedButton primary icon={<FontIcon className="material-icons" >list</FontIcon>} label="Ver Tabla" />
             </Link>

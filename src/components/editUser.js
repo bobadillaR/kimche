@@ -52,7 +52,7 @@ export default class EditUser extends Component {
     const { name, email, cellphone, rut, admin } = this.state;
     if (name && rut && email) {
       this.setState({ loading: true });
-      secondaryApp.auth().createUserWithEmailAndPassword(email, rut)
+      secondaryApp.auth().createUserWithEmailAndPassword(email, '123456')
       .then(user =>
         database.child(`/${admin ? 'admins' : 'users'}/${user.uid}`).set({
           email,
@@ -61,7 +61,7 @@ export default class EditUser extends Component {
           rut,
           cellphone,
           admin,
-          createDate: moment().format('DD-MM-YYYY, h:mm a'),
+          createDate: moment().unix(),
         }),
       )
       .then(() => secondaryApp.auth().currentUser.updateProfile({ displayName: admin ? 'admin' : 'normal' }))

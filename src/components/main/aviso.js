@@ -7,6 +7,9 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 import CircularProgress from 'material-ui/CircularProgress';
+import { List, ListItem } from 'material-ui/List';
+import Divider from 'material-ui/Divider';
+import Subheader from 'material-ui/Subheader';
 
 import Message from '../utilities/message';
 
@@ -72,60 +75,87 @@ export default class Aviso extends Component {
             actAsExpander
             showExpandableButton
           />
-          <Stepper activeStep={state} orientation="vertical">
-            <Step active={expand && state >= 0}>
-              <StepLabel>Ver el aviso</StepLabel>
-              <StepContent>
-                {message.text.split('/n').map(par => <p>{par}</p>)}
-              </StepContent>
-            </Step>
-            <Step active={expand && state >= 1}>
-              <StepLabel>¿Por qué pasó?</StepLabel>
-              <StepContent>
-                <div>
-                  {alert === 2 && <Message message={'Se han guardado los cambios'} style={{ margin: 5 }} tipo="success" time={4000} onClose={() => this.setState({ alert: false })} />}
-                  <div style={{ alignItems: 'center', display: 'flex' }}>
-                    <FontIcon style={{ marginRight: '2%' }} className="material-icons" >school</FontIcon>
-                    <TextField value={porque} floatingLabelFixed hintText="Explicación..." floatingLabelText="Porque paso?" onChange={(event, porqueVal) => this.setState({ porque: porqueVal })} fullWidth />
+          {message.tipo !== 'soporte' ?
+            <Stepper activeStep={state} orientation="vertical">
+              <Step active={expand && state >= 0}>
+                <StepLabel>Ver el aviso</StepLabel>
+                <StepContent>
+                  {message.text.split('/n').map(par => <p>{par}</p>)}
+                  <br />
+                  <List>
+                    <Subheader>{message.table && message.tableTitle}</Subheader>
+                    <Divider />
+                    {message.table && message.table.filter(a => a !== 'title').map(table =>
+                      <ListItem primaryText={table.student} rightIcon={<p>{table.data}</p>} />,
+                    )}
+                  </List>
+                </StepContent>
+              </Step>
+              <Step active={expand && state >= 1}>
+                <StepLabel>¿Por qué pasó?</StepLabel>
+                <StepContent>
+                  <div>
+                    {alert === 2 && <Message message={'Se han guardado los cambios'} style={{ margin: 5 }} tipo="success" time={4000} onClose={() => this.setState({ alert: false })} />}
+                    <div style={{ alignItems: 'center', display: 'flex' }}>
+                      <FontIcon style={{ marginRight: '2%' }} className="material-icons" >school</FontIcon>
+                      <TextField value={porque} floatingLabelFixed hintText="Explicación..." floatingLabelText="Porque paso?" onChange={(event, porqueVal) => this.setState({ porque: porqueVal })} fullWidth />
+                    </div>
                   </div>
-                </div>
-                <CardActions>
-                  <RaisedButton
-                    primary
-                    disabled={loading}
-                    label="Enviar"
-                    onTouchTap={() => {
-                      database.child('messages').child(messageKey).update({ porque, state: state > 2 ? 3 : 2 });
-                      this.setState({ alert: 2 });
-                    }}
-                  />
-                </CardActions>
-              </StepContent>
-            </Step>
-            <Step active={expand && state >= 2}>
-              <StepLabel>¿Qué se hizo?</StepLabel>
-              <StepContent>
-                <div>
-                  {alert === 3 && <Message message={'Se ha completado el aviso'} style={{ margin: 5 }} tipo="success" time={4000} onClose={() => this.setState({ alert: false })} />}
-                  <div style={{ alignItems: 'center', display: 'flex' }}>
-                    <FontIcon style={{ marginRight: '2%' }} className="material-icons" >school</FontIcon>
-                    <TextField value={que} floatingLabelFixed hintText="Explicación" floatingLabelText="Que paso?" onChange={(event, queVal) => this.setState({ que: queVal })} fullWidth />
+                  <CardActions>
+                    <RaisedButton
+                      primary
+                      disabled={loading}
+                      label="Enviar"
+                      onTouchTap={() => {
+                        database.child('messages').child(messageKey).update({ porque, state: state > 2 ? 3 : 2 });
+                        this.setState({ alert: 2 });
+                      }}
+                    />
+                  </CardActions>
+                </StepContent>
+              </Step>
+              <Step active={expand && state >= 2}>
+                <StepLabel>¿Qué se hizo?</StepLabel>
+                <StepContent>
+                  <div>
+                    {alert === 3 && <Message message={'Se ha completado el aviso'} style={{ margin: 5 }} tipo="success" time={4000} onClose={() => this.setState({ alert: false })} />}
+                    <div style={{ alignItems: 'center', display: 'flex' }}>
+                      <FontIcon style={{ marginRight: '2%' }} className="material-icons" >school</FontIcon>
+                      <TextField value={que} floatingLabelFixed hintText="Explicación" floatingLabelText="Que paso?" onChange={(event, queVal) => this.setState({ que: queVal })} fullWidth />
+                    </div>
                   </div>
-                </div>
-                <CardActions>
-                  <RaisedButton
-                    primary
-                    disabled={loading}
-                    label="Enviar"
-                    onTouchTap={() => {
-                      database.child('messages').child(messageKey).update({ que, state: 3 });
-                      this.setState({ alert: 3 });
-                    }}
-                  />
-                </CardActions>
-              </StepContent>
-            </Step>
-          </Stepper>
+                  <CardActions>
+                    <RaisedButton
+                      primary
+                      disabled={loading}
+                      label="Enviar"
+                      onTouchTap={() => {
+                        database.child('messages').child(messageKey).update({ que, state: 3 });
+                        this.setState({ alert: 3 });
+                      }}
+                    />
+                  </CardActions>
+                </StepContent>
+              </Step>
+            </Stepper>
+            :
+            <Stepper orientation="vertical">
+              <Step active={expand}>
+                <StepLabel>Ver el aviso</StepLabel>
+                <StepContent>
+                  {message.text.split('/n').map(par => <p>{par}</p>)}
+                  <br />
+                  <List>
+                    <Subheader>{message.table && message.tableTitle}</Subheader>
+                    <Divider />
+                    {message.table && message.table.filter(a => a !== 'title').map(table =>
+                      <ListItem key={table.student} primaryText={table.student} rightIcon={<p>{table.data}</p>} />,
+                    )}
+                  </List>
+                </StepContent>
+              </Step>
+            </Stepper>
+          }
         </Card>
         }
       </Paper>

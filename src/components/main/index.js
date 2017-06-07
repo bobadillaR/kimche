@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 import Paper from 'material-ui/Paper';
 import CircularProgress from 'material-ui/CircularProgress';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import FontIcon from 'material-ui/FontIcon';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import { Redirect } from 'react-router-dom';
 import Aviso from './aviso';
 import ViewAviso from './viewAviso';
 
@@ -15,7 +17,7 @@ export default class Main extends Component {
     this.state = {
       messagesKey: [],
       expand: false,
-      loading: false,
+      loading: true,
       alert: false,
       tab: true,
       schools: {},
@@ -30,7 +32,7 @@ export default class Main extends Component {
     const { userData, database } = this.props;
     if (userData !== null && userData.schools !== undefined) {
       this.setState({ loading: true });
-      const dataMessages = Object.keys(userData.schools[Object.keys(userData.schools)[0]].messages);
+      const dataMessages = userData.schools[Object.keys(userData.schools)[0]].messages !== undefined ? Object.keys(userData.schools[Object.keys(userData.schools)[0]].messages) : [];
       if (Object.values(userData.schools)[0].admin) {
         database.child('schools').child(Object.keys(userData.schools)[0]).on('value', data =>
           this.setState({
@@ -50,6 +52,7 @@ export default class Main extends Component {
         });
       }
     }
+    this.setState({ loading: false });
   }
 
   componentWillReceiveProps() {
@@ -57,7 +60,9 @@ export default class Main extends Component {
     const { update } = this.state;
     if (update && userData !== null && userData.schools !== undefined) {
       this.setState({ loading: true });
-      const dataMessages = Object.keys(userData.schools[Object.keys(userData.schools)[0]].messages);
+      let dataMessages = [];
+      if (userData.schools[Object.keys(userData.schools)[0]].messages !== undefined) dataMessages = userData.schools[Object.keys(userData.schools)[0]].messages;
+      dataMessages = Object.keys(dataMessages).sort().reverse();
       if (Object.values(userData.schools)[0].admin) {
         database.child('schools').child(Object.keys(userData.schools)[0]).on('value', data =>
           this.setState({
@@ -79,20 +84,51 @@ export default class Main extends Component {
         });
       }
     }
+    this.setState({ loading: false });
+    // this.orderMessages();
   }
+
+  // orderMessages() {
+  //   const { database } = this.props;
+  //   database.child('messages').on('value', (data) => {
+  //     const update = {};
+  //     data.forEach((messageId) => {
+  //       if (messageId.val().table !== undefined) update[`messages/${messageId.key}/table/title`] = null;
+  //       if (messageId.val().table !== undefined) update[`messages/${messageId.key}/tableTitle`] = 'Tabla de datos';
+  //     });
+  //     console.log(update);
+  //     database.update(update);
+  //   });
+  // database.child('users').on('value', (data) => {
+  //   const update = {};
+  //   data.forEach((messageId) => {
+  //     update[`users/${messageId.key}/createDate`] = moment().unix();
+  //   });
+  //   database.update(update);
+  // });
+  // database.child('schools').on('value', (data) => {
+  //   const update = {};
+  //   data.forEach((messageId) => {
+  //     update[`schools/${messageId.key}/createDate`] = moment().unix();
+  //   });
+  //   database.update(update);
+  // });
+  // }
 
   selectUser(userKey) {
     const { database } = this.props;
     const { school } = this.state;
     this.setState({ loading: true });
     database.child(`users/${userKey}/schools/${school}`).on('value', data =>
-      this.setState({ loading: false, userSelectedMessages: data.val().messages !== undefined ? Object.keys(data.val().messages) : [], teacherSelecter: userKey }),
+      this.setState({ loading: false, userSelectedMessages: data.val().messages !== undefined ? Object.keys(data.val().messages).sort().reverse() : [], teacherSelecter: userKey }),
     );
   }
 
   render() {
     const { loading, tab, messagesKey, teacherSelecter, admin, users, userSelectedMessages } = this.state;
+    console.log(userSelectedMessages);
     const { user } = this.props;
+    if (!loading && !user) return <Redirect to={'/login'} />;
     return (
       <div>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -128,7 +164,6 @@ export default class Main extends Component {
                   :
                   <div>
                     <hr />
-                    <h3>Selecciona un usuario</h3>
                     <div style={{ alignItems: 'center', display: 'flex' }}>
                       <FontIcon style={{ marginRight: '2%' }} className="material-icons" >face</FontIcon>
                       <SelectField value={teacherSelecter} floatingLabelFixed hintText="Selecciona un profesor" floatingLabelText="Profesor" onChange={(event, textoVal, key) => this.selectUser(key)} fullWidth >
