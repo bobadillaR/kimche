@@ -10,7 +10,7 @@ import CircularProgress from 'material-ui/CircularProgress';
 import { List, ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import Subheader from 'material-ui/Subheader';
-
+import moment from 'moment';
 import Message from '../utilities/message';
 
 export default class Aviso extends Component {
@@ -71,7 +71,7 @@ export default class Aviso extends Component {
             style={{ backgroundColor: chooseColor[message.tipo] }}
             title={message.title}
             titleColor="white"
-            subtitle={`Fecha de creacion: ${message.createDate}`}
+            subtitle={`Fecha de creacion: ${moment.unix(message.createDate).format('DD/MM/YY, hh:mm')}`}
             actAsExpander
             showExpandableButton
           />

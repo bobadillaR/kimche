@@ -3,12 +3,12 @@ import FontIcon from 'material-ui/FontIcon';
 import { lightBlue500, green500, orange500, red500, yellow500 } from 'material-ui/styles/colors';
 import { Step, Stepper, StepLabel, StepContent } from 'material-ui/Stepper';
 import { Card, CardHeader } from 'material-ui/Card';
-import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import CircularProgress from 'material-ui/CircularProgress';
 import { List, ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import Subheader from 'material-ui/Subheader';
+import moment from 'moment';
 
 import Message from '../utilities/message';
 
@@ -58,7 +58,7 @@ export default class ViewAviso extends Component {
               style={{ backgroundColor: chooseColor[message.tipo] }}
               title={message.title}
               titleColor="white"
-              subtitle={`Fecha de creacion: ${message.createDate}`}
+              subtitle={`Fecha de creacion: ${moment.unix(message.createDate).format('DD/MM/YY, hh:mm')}`}
               actAsExpander
               showExpandableButton
             />

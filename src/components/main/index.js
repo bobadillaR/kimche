@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import moment from 'moment';
 import Paper from 'material-ui/Paper';
 import CircularProgress from 'material-ui/CircularProgress';
 import { Tabs, Tab } from 'material-ui/Tabs';
@@ -126,7 +125,6 @@ export default class Main extends Component {
 
   render() {
     const { loading, tab, messagesKey, teacherSelecter, admin, users, userSelectedMessages } = this.state;
-    console.log(userSelectedMessages);
     const { user } = this.props;
     if (!loading && !user) return <Redirect to={'/login'} />;
     return (

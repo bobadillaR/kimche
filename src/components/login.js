@@ -7,7 +7,6 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 import CircularProgress from 'material-ui/CircularProgress';
-import { blueGrey200 } from 'material-ui/styles/colors';
 
 import Message from './utilities/message';
 

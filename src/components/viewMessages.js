@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 
 import Paper from 'material-ui/Paper';
 import FontIcon from 'material-ui/FontIcon';
@@ -53,7 +54,7 @@ export default class ViewMessages extends Component {
                 <TableRow key={key}>
                   <TableRowColumn>{value.title}</TableRowColumn>
                   <TableRowColumn>{value.schoolName}</TableRowColumn>
-                  <TableRowColumn>{value.createDate}</TableRowColumn>
+                  <TableRowColumn>{moment.unix(value.createDate).format('DD/MM/YY')}</TableRowColumn>
                   <TableRowColumn>{value.editDate}</TableRowColumn>
                   <TableRowColumn><FontIcon className="material-icons" >{value.admin ? 'assignment_ind' : 'face'}</FontIcon>{value.userName}</TableRowColumn>
                   <TableRowColumn style={{ cursor: 'pointer', alignItems: 'center', display: 'flex' }} onTouchTap={() => this.props.history.push(`/admin/messages/edit/${key}`)}>Editar <FontIcon className="material-icons" >edit</FontIcon></TableRowColumn>
