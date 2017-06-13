@@ -47,11 +47,12 @@ export default class ViewSchools extends Component {
           <Table>
             <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
               <TableRow>
-                <TableHeaderColumn colSpan="4" tooltip="Tabla de Usuarios" style={{ textAlign: 'center' }}>
+                <TableHeaderColumn colSpan="5" tooltip="Tabla de Usuarios" style={{ textAlign: 'center' }}>
                   Tabla de Colegios
                 </TableHeaderColumn>
               </TableRow>
               <TableRow>
+                <TableHeaderColumn tooltip="Identificador">ID</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Nombre del Colegio">Nombre</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Administradores son usuarios que pueden ver todos los mensajes del colegio">Administradores</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Profesores solo pueden ver sus mensajes">Profesores</TableHeaderColumn>
@@ -61,10 +62,11 @@ export default class ViewSchools extends Component {
             <TableBody showRowHover displayRowCheckbox={false}>
               {Object.entries(schools).map(([key, value]) => (
                 <TableRow key={key}>
+                  <TableRowColumn>{key}</TableRowColumn>
                   <TableRowColumn>{value.name}</TableRowColumn>
-                  <TableRowColumn>{value.admins !== undefined && Object.entries(value.admins).map(([, name]) => name)}</TableRowColumn>
-                  <TableRowColumn>{value.teachers !== undefined && Object.entries(value.teachers).map(([, name]) => name)}</TableRowColumn>
-                  <TableRowColumn style={{ cursor: 'pointer', alignItems: 'center', display: 'flex' }} onTouchTap={() => this.props.history.push(`/admin/schools/edit/${key}`)}>Editar <FontIcon className="material-icons" >edit</FontIcon></TableRowColumn>
+                  <TableRowColumn>{value.admins !== undefined && Object.entries(value.admins).map(([, name]) => <p>{name}</p>)}</TableRowColumn>
+                  <TableRowColumn>{value.teachers !== undefined && Object.entries(value.teachers).map(([, name]) => <p>{name}</p>)}</TableRowColumn>
+                  <TableRowColumn style={{ cursor: 'pointer' }} onTouchTap={() => this.props.history.push(`/admin/schools/edit/${key}`)}>Editar <FontIcon className="material-icons" >edit</FontIcon></TableRowColumn>
                 </TableRow>
               ))}
             </TableBody>

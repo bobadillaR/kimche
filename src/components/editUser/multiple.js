@@ -63,7 +63,7 @@ export default class Multple extends Component {
       if (element.RUT !== '' && element.Nombre !== '' && element.Mail !== '') return 1;
       else { validatorGeneral = true; return 0; }
     });
-    this.setState({ data: JSON.parse(textValue), validator, validatorGeneral });
+    this.setState({ data, validator, validatorGeneral });
   }
 
   render() {

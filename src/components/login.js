@@ -73,10 +73,10 @@ export default class Login extends Component {
             {!recoveryView && <div>
               <TextField hintText="Contraseña" floatingLabelText="Contraseña" type="password" onChange={(a, password) => this.setState({ password })} fullWidth errorText={error && error.code.includes('password') && 'Lo lamentamos no hemos podido ingresar con este usuario y contraseña'} />
               <RaisedButton type="submit" primary disabled={loading} label="Iniciar Sesión" fullWidth />
-              <FlatButton label="Recuperar Contraseña" disabled={loading} primary onTouchTap={() => { if (!recoveryView) this.setState({ recoveryView: true }); else this.recovery(); }} fullWidth={recoveryView} icon={<FontIcon className="material-icons" >vpn_key</FontIcon>} />
             </div>
             }
           </form>
+          <FlatButton label="Recuperar Contraseña" disabled={loading} primary onTouchTap={() => { if (!recoveryView) this.setState({ recoveryView: true }); else this.recovery(); }} fullWidth={recoveryView} icon={<FontIcon className="material-icons" >vpn_key</FontIcon>} />
           <br />
           {recoveryView &&
             <div>

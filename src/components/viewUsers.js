@@ -7,6 +7,8 @@ import Paper from 'material-ui/Paper';
 import FontIcon from 'material-ui/FontIcon';
 import RaisedButton from 'material-ui/RaisedButton';
 import { yellow500 } from 'material-ui/styles/colors';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 
 // TODO: add loading
 // TODO: add schools
@@ -20,17 +22,19 @@ export default class ViewUsers extends Component {
       userRelations: {},
       schools: {},
       loading: true,
+      school: '',
     };
   }
 
   componentWillMount() {
     const { database } = this.props;
     this.setState({ loading: true });
-    database.on('value', data => this.setState({ admins: data.val().admins || {}, users: data.val().users || {}, loading: false }));
+    database.on('value', data => this.setState({ admins: data.val().admins || {}, users: data.val().users || {}, loading: false, schools: data.val().schools }));
   }
 
   render() {
-    const { loading, admins, users } = this.state;
+    const { loading, admins, users, schools, school } = this.state;
+    console.log(Object.entries(users).filter(usersFilter => Object.keys(usersFilter[1].schools).map(schoolId => schoolId === school) || school === ''));
     return (
       <div>
         <Paper style={{ margin: '5%', padding: '3%' }} zDepth={4} >
@@ -41,6 +45,14 @@ export default class ViewUsers extends Component {
                 <RaisedButton primary icon={<FontIcon className="material-icons" >person_add</FontIcon>} label="Crear Usuario" />
               </Link>
             </div>
+          </div>
+          <div style={{ alignItems: 'center', display: 'flex' }}>
+            <FontIcon style={{ marginRight: '2%' }} className="material-icons" >school</FontIcon>
+            <SelectField value={school} hintText="Nombre del colegio" floatingLabelText="Colegio" onChange={(event, index, value) => this.setState({ school: value })} fullWidth >
+              {Object.entries(schools).map(([key, value]) => (
+                <MenuItem key={key} value={key} primaryText={value.name} />
+              ))}
+            </SelectField>
           </div>
           {loading ?
             <center><CircularProgress size={80} /></center>
@@ -61,13 +73,13 @@ export default class ViewUsers extends Component {
                 </TableRow>
               </TableHeader>
               <TableBody showRowHover displayRowCheckbox={false}>
-                {Object.entries(users).map(([key, value]) => (
+                {Object.entries(users).filter(usersFilter => Object.keys(usersFilter[1].schools).map(schoolId => schoolId === school) || school === '').map(([key, value]) => (
                   <TableRow key={key}>
                     <TableRowColumn>{key}</TableRowColumn>
                     <TableRowColumn>{value.name}</TableRowColumn>
-                    <TableRowColumn>{value.schools !== undefined && Object.values(value.schools).map(school => `${school.name}, `)}</TableRowColumn>
+                    <TableRowColumn>{value.schools !== undefined && Object.values(value.schools).map(schoolValue => <p>{schoolValue.name}</p>)}</TableRowColumn>
                     <TableRowColumn>{value.email}</TableRowColumn>
-                    <TableRowColumn style={{ alignItems: 'center', display: 'flex', cursor: 'pointer' }} onTouchTap={() => this.props.history.push(`/admin/users/edit/users/${key}`)}>Editar <FontIcon className="material-icons" >edit</FontIcon></TableRowColumn>
+                    <TableRowColumn style={{ alignItems: 'center' }} onTouchTap={() => this.props.history.push(`/admin/users/edit/users/${key}`)}>Editar <FontIcon className="material-icons" >edit</FontIcon></TableRowColumn>
                   </TableRow>
                 ))}
                 {Object.entries(admins).map(([key, value]) => (
@@ -76,7 +88,7 @@ export default class ViewUsers extends Component {
                     <TableRowColumn style={{ alignItems: 'center', display: 'flex' }}><FontIcon color={yellow500} className="material-icons" >star</FontIcon>{value.name}</TableRowColumn>
                     <TableRowColumn>-</TableRowColumn>
                     <TableRowColumn>{value.email}</TableRowColumn>
-                    <TableRowColumn style={{ alignItems: 'center', display: 'flex', cursor: 'pointer' }} onTouchTap={() => this.props.history.push(`/admin/users/edit/admins/${key}`)}>Editar <FontIcon className="material-icons" >edit</FontIcon></TableRowColumn>
+                    <TableRowColumn style={{ alignItems: 'center' }} onTouchTap={() => this.props.history.push(`/admin/users/edit/admins/${key}`)}>Editar <FontIcon className="material-icons" >edit</FontIcon></TableRowColumn>
                   </TableRow>
                 ))}
               </TableBody>
