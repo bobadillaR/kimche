@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import { Link } from 'react-router-dom';
-import CircularProgress from 'material-ui/CircularProgress';
 
+import CircularProgress from 'material-ui/CircularProgress';
 import Paper from 'material-ui/Paper';
 import FontIcon from 'material-ui/FontIcon';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -19,7 +19,6 @@ export default class ViewUsers extends Component {
     super(props);
     this.state = {
       users: {},
-      userRelations: {},
       schools: {},
       loading: true,
       school: '',
@@ -34,7 +33,6 @@ export default class ViewUsers extends Component {
 
   render() {
     const { loading, admins, users, schools, school } = this.state;
-    console.log(Object.entries(users).filter(usersFilter => Object.keys(usersFilter[1].schools).map(schoolId => schoolId === school) || school === ''));
     return (
       <div>
         <Paper style={{ margin: '5%', padding: '3%' }} zDepth={4} >
@@ -73,11 +71,11 @@ export default class ViewUsers extends Component {
                 </TableRow>
               </TableHeader>
               <TableBody showRowHover displayRowCheckbox={false}>
-                {Object.entries(users).filter(usersFilter => Object.keys(usersFilter[1].schools).map(schoolId => schoolId === school) || school === '').map(([key, value]) => (
+                {Object.entries(users).filter((user) => { if (school === '') return true; else return Object.keys(user[1].schools).indexOf(school) >= 0; }).map(([key, value]) => (
                   <TableRow key={key}>
                     <TableRowColumn>{key}</TableRowColumn>
                     <TableRowColumn>{value.name}</TableRowColumn>
-                    <TableRowColumn>{value.schools !== undefined && Object.values(value.schools).map(schoolValue => <p>{schoolValue.name}</p>)}</TableRowColumn>
+                    <TableRowColumn>{value.schools !== undefined && Object.values(value.schools).map(schoolValue => <p key={schoolValue.name}>{schoolValue.name}</p>)}</TableRowColumn>
                     <TableRowColumn>{value.email}</TableRowColumn>
                     <TableRowColumn style={{ alignItems: 'center' }} onTouchTap={() => this.props.history.push(`/admin/users/edit/users/${key}`)}>Editar <FontIcon className="material-icons" >edit</FontIcon></TableRowColumn>
                   </TableRow>

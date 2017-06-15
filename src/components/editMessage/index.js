@@ -66,6 +66,9 @@ export default class EditMessage extends Component {
             userId: message.val().userId || '',
             table: message.val().table || [],
             tableTitle: message.val().tableTitle || '',
+            que: message.val().que || '',
+            porque: message.val().porque || '',
+            editDate: message.val().editDate || '',
           });
         });
       } else this.setState({ loading: false });
@@ -157,7 +160,7 @@ export default class EditMessage extends Component {
   }
 
   renderSingle() {
-    const { loading, errorTitle, alert, texto, admins, school, teachers, schools, tipoList, tipo, title, visibility, errorType, errorSchool, table, tableTitle } = this.state;
+    const { loading, errorTitle, alert, texto, admins, school, teachers, schools, tipoList, tipo, title, visibility, errorType, errorSchool, table, tableTitle, que, porque, editDate } = this.state;
     const { editable } = this.props;
     return (
       <Paper style={{ margin: '5%', padding: '3%', marginTop: !editable ? 0 : '5%' }} zDepth={4}>
@@ -193,7 +196,6 @@ export default class EditMessage extends Component {
                 <MenuItem key={key} value={key} primaryText={value} checked={admins.indexOf(key) > -1} />,
             )}
           </SelectField>
-
         </div>
         <div style={{ alignItems: 'center', display: 'flex' }}>
           <FontIcon style={{ marginRight: '2%' }} className="material-icons" >face</FontIcon>
@@ -212,6 +214,23 @@ export default class EditMessage extends Component {
             )}
           </SelectField>
         </div>
+        {editable &&
+          <div>
+            <div style={{ alignItems: 'center', display: 'flex' }}>
+              <FontIcon style={{ marginRight: '2%' }} className="material-icons" >question_answer</FontIcon>
+              <TextField disabled value={que} floatingLabelFixed floatingLabelText="Que" fullWidth />
+
+            </div>
+            <div style={{ alignItems: 'center', display: 'flex' }}>
+              <FontIcon style={{ marginRight: '2%' }} className="material-icons" >question_answer</FontIcon>
+              <TextField disabled value={porque} floatingLabelFixed floatingLabelText="Por que" fullWidth />
+            </div>
+            <div style={{ alignItems: 'center', display: 'flex' }}>
+              <FontIcon style={{ marginRight: '2%' }} className="material-icons" >timer</FontIcon>
+              <TextField disabled value={moment.unix(editDate).format('DD/MM/YY, hh:mm')} floatingLabelFixed floatingLabelText="Fecha de edicion" fullWidth />
+            </div>
+          </div>
+        }
         <div>
           <hr />
           <Table selectable={false} >
@@ -230,7 +249,7 @@ export default class EditMessage extends Component {
             </TableHeader>
             <TableBody showRowHover displayRowCheckbox={false}>
               {table.map((data, key) =>
-                (<TableRow>
+                (<TableRow key={data.student} >
                   <TableRowColumn>
                     <TextField value={data.student} hintText="Nombre del Alumno" onChange={(event, textoVal) => { table[key].student = textoVal; this.setState({ table }); }} fullWidth />
                   </TableRowColumn>

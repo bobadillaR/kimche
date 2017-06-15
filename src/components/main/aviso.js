@@ -39,7 +39,7 @@ export default class Aviso extends Component {
   expand(id, message, value) {
     const { database, messageKey } = this.props;
     if (message.state === 0) {
-      database.child('messages').child(messageKey).update({ state: 1 });
+      database.child('messages').child(messageKey).update({ state: 1, editDate: moment().unix() });
     }
     this.setState({ expand: value });
   }
@@ -107,7 +107,7 @@ export default class Aviso extends Component {
                       disabled={loading}
                       label="Enviar"
                       onTouchTap={() => {
-                        database.child('messages').child(messageKey).update({ porque, state: state > 2 ? 3 : 2 });
+                        database.child('messages').child(messageKey).update({ porque, state: state > 2 ? 3 : 2, editDate: moment().unix() });
                         this.setState({ alert: 2 });
                       }}
                     />
@@ -130,7 +130,7 @@ export default class Aviso extends Component {
                       disabled={loading}
                       label="Enviar"
                       onTouchTap={() => {
-                        database.child('messages').child(messageKey).update({ que, state: 3 });
+                        database.child('messages').child(messageKey).update({ que, state: 3, editDate: moment().unix() });
                         this.setState({ alert: 3 });
                       }}
                     />
