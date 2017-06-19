@@ -70,7 +70,7 @@ export default class ViewSchools extends Component {
                   <TableRow key={key}>
                     <TableRowColumn>{key}</TableRowColumn>
                     <TableRowColumn>{value.name}</TableRowColumn>
-                    <TableRowColumn>{value.admins !== undefined && Object.entries(value.admins).map(([, name]) => <p>{name}</p>)}</TableRowColumn>
+                    <TableRowColumn>{value.admins !== undefined && Object.entries(value.admins).map(([keyAdmin, name]) => <p key={keyAdmin}>{name}</p>)}</TableRowColumn>
                     <TableRowColumn>{value.teachers !== undefined && Object.entries(value.teachers).map(([, name]) => <p>{name}</p>)}</TableRowColumn>
                     <TableRowColumn style={{ cursor: 'pointer' }} onTouchTap={() => this.props.history.push(`/admin/schools/edit/${key}`)}>Editar <FontIcon className="material-icons" >edit</FontIcon></TableRowColumn>
                   </TableRow>

@@ -8,23 +8,17 @@ import Divider from 'material-ui/Divider';
 import Subheader from 'material-ui/Subheader';
 import moment from 'moment';
 
-export default class avisoCreate extends Component {
+export default class AvisoCreate extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      porque: '',
-      que: '',
-      loading: false,
-      alert: false,
-      expand: false,
       message: {},
-      state: 0,
     };
   }
 
   render() {
-    const { message } = this.props;
+    const { message, users, schools, validator } = this.props;
     const chooseColor = {
       soporte: lightBlue500,
       felicitar: green500,
@@ -45,22 +39,27 @@ export default class avisoCreate extends Component {
           <CardHeader
             avatar={<FontIcon color="white" className="material-icons" style={{ fontSize: 42 }} >{chooseIcon[message.tipo]}</FontIcon>}
             style={{ backgroundColor: chooseColor[message.tipo] }}
-            title={message.title}
+            title={`Usuario: ${users[message.userId].name}, Colegio: ${schools[message.schoolId].name}`}
             titleColor="white"
-            subtitle={`Fecha de creacion: ${moment.unix(message.createDate).format('DD/MM/YY, hh:mm')}`}
-            actAsExpander
-            showExpandableButton
+            subtitle={`Fecha de creacion: ${moment().format('DD/MM/YY, hh:mm')}`}
           />
-          <h4>Texto</h4>
-          <p>{message.text.split('/n').map(par => <p>{par}</p>)}</p>
-          <br />
-          <List>
-            <Subheader>{message.table && message.tableTitle}</Subheader>
-            <Divider />
-            {message.table && message.table.filter(a => a !== 'title').map(table =>
-              <ListItem primaryText={table.student} rightIcon={<p>{table.data}</p>} />,
-            )}
-          </List>
+          <div style={{ marginLeft: 10 }}>
+            <h3 style={{ marginTop: 10 }}>{message.title}</h3>
+            <Subheader>{validator ? 'Aprobado' : 'Rechazado'}</Subheader>
+            <p>{message.text.split('/n').map(par => <p key={par}>{par}</p>)}</p>
+            <br />
+            <List>
+              <Subheader>{message.table && message.tableTitle}</Subheader>
+              <Divider />
+              <List>
+                <Subheader>{message.tableTitle}</Subheader>
+                <Divider />
+                <ListItem primaryText={message.student1} rightIcon={<p>{message.data1}</p>} />
+                <ListItem primaryText={message.student2} rightIcon={<p>{message.data2}</p>} />
+                <ListItem primaryText={message.student3} rightIcon={<p>{message.data3}</p>} />
+              </List>
+            </List>
+          </div>
         </Card>
       </Paper>
     );
