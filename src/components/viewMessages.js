@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+import { lime300, lightGreen300, green300, teal300 } from 'material-ui/styles/colors';
 
 import Paper from 'material-ui/Paper';
 import FontIcon from 'material-ui/FontIcon';
@@ -20,6 +21,7 @@ export default class ViewMessages extends Component {
       loading: true,
       school: '',
       user: '',
+      colors: [lime300, lightGreen300, green300, teal300],
     };
   }
 
@@ -30,7 +32,7 @@ export default class ViewMessages extends Component {
   }
 
   render() {
-    const { messages, loading, schools, school, user } = this.state;
+    const { messages, loading, schools, school, user, colors } = this.state;
     return (
       <div>
         <Paper style={{ margin: '5%', padding: '3%' }} zDepth={4} >
@@ -86,7 +88,7 @@ export default class ViewMessages extends Component {
                   .filter((data) => { if (school !== '') return data[1].schoolId === school; else return true; })
                   .filter((data) => { if (user !== '') return data[1].userId === user; else return true; })
                   .map(([key, value]) => (
-                    <TableRow key={key}>
+                    <TableRow key={key} style={{ backgroundColor: colors[value.state] }}>
                       <TableRowColumn>({value.state}) - {value.title}</TableRowColumn>
                       <TableRowColumn>{value.schoolName}</TableRowColumn>
                       <TableRowColumn>{moment.unix(value.createDate).format('DD/MM/YY')}</TableRowColumn>

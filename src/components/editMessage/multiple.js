@@ -23,6 +23,7 @@ export default class Multple extends Component {
       alert: false,
       school: '',
       schools: {},
+      charged: false,
     };
   }
 
@@ -40,9 +41,9 @@ export default class Multple extends Component {
     data.forEach((dataVal) => {
       const messageKey = database.child('school').push().key;
       const table = [
-        { data: dataVal.data1, student: dataVal.student1 },
-        { data: dataVal.data2, student: dataVal.student2 },
-        { data: dataVal.data3, student: dataVal.student3 },
+        dataVal.data1 !== 0 && { data: dataVal.data1, student: dataVal.student1 },
+        dataVal.data2 !== 0 && { data: dataVal.data2, student: dataVal.student2 },
+        dataVal.data3 !== 0 && { data: dataVal.data3, student: dataVal.student3 },
       ];
       update[`messages/${messageKey}/title`] = dataVal.title;
       update[`messages/${messageKey}/text`] = dataVal.text;
@@ -66,26 +67,34 @@ export default class Multple extends Component {
   }
 
   chargeData(textValue) {
-    const data = JSON.parse(textValue);
-    let validatorGeneral = true;
-    const validator = data.map((element) => {
-      if (element.userId !== '' && element.schoolId !== '' && element.tipo !== '') return 1;
-      else { validatorGeneral = false; return 0; }
-    });
-    this.setState({ data, validator, validatorGeneral });
+    if (textValue[0] === '[') {
+      const data = JSON.parse(textValue);
+      let validatorGeneral = true;
+      const validator = data.map((element) => {
+        if (element.userId !== '' && element.schoolId !== '' && element.tipo !== '') return 1;
+        else { validatorGeneral = false; return 0; }
+      });
+      this.setState({ data, validator, validatorGeneral, charged: 0 });
+    } else this.setState({ data: false });
   }
 
   render() {
     const { validatorGeneral, alert, data, loading, validator } = this.state;
+    let { charged } = this.state;
     return (
       loading ? <center style={{ marginTop: '20%' }}><CircularProgress size={120} /></center>
       :
       <Paper style={{ margin: '5%', padding: '3%', marginTop: 0 }} zDepth={4}>
         <TextField fullWidth floatingLabelFixed hintText="Script JSON" floatingLabelText="JSON" onChange={(e, textValue) => this.chargeData(textValue)} />
         {alert && <Message message={'Se han creado todos los mensajes'} tipo="success" time={4000} onClose={() => this.setState({ alert: false })} />}
-        {data.length > 0 &&
-          data.map((aviso, key) => <AvisoCreate key={aviso.userID} message={aviso} {...this.state} validator={validator[key]} />)
+        {charged && charged < data.length && <h3>Se han cargado {charged}/{data.length}</h3>}
+        {data && data !== '' && data.length > 0 &&
+          data.map((aviso, key) => {
+            charged += 1;
+            return (<AvisoCreate key={aviso.userID} message={aviso} {...this.state} validator={validator[key]} index={key} />);
+          })
         }
+        {!data && <h3>Error en Script</h3>}
         <RaisedButton disabled={!validatorGeneral} style={{ float: 'right' }} primary icon={<FontIcon className="material-icons" >person_add</FontIcon>} label="Crear todos los avisos" onTouchTap={() => this.create()} />
       </Paper>
     );

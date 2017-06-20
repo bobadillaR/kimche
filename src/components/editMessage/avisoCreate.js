@@ -33,6 +33,8 @@ export default class AvisoCreate extends Component {
       soporte: 'info',
       conservar: 'sync',
     };
+    if (users[message.userId] === undefined) return <Paper style={{ margin: 10 }} ><h3>Error en userId: <p><strong>{message.userId}</strong></p></h3></Paper>;
+    else if (schools[message.schoolId] === undefined) return <Paper style={{ margin: 10 }} ><h3>Error en schoolId: <p><strong>{message.schoolId}</strong></p></h3></Paper>;
     return (
       <Paper style={{ margin: 10 }}>
         <Card>
@@ -40,7 +42,6 @@ export default class AvisoCreate extends Component {
             avatar={<FontIcon color="white" className="material-icons" style={{ fontSize: 42 }} >{chooseIcon[message.tipo]}</FontIcon>}
             style={{ backgroundColor: chooseColor[message.tipo] }}
             title={`Usuario: ${users[message.userId].name}, Colegio: ${schools[message.schoolId].name}`}
-            titleColor="white"
             subtitle={`Fecha de creacion: ${moment().format('DD/MM/YY, hh:mm')}`}
           />
           <div style={{ marginLeft: 10 }}>
@@ -54,9 +55,9 @@ export default class AvisoCreate extends Component {
               <List>
                 <Subheader>{message.tableTitle}</Subheader>
                 <Divider />
-                <ListItem primaryText={message.student1} rightIcon={<p>{message.data1}</p>} />
-                <ListItem primaryText={message.student2} rightIcon={<p>{message.data2}</p>} />
-                <ListItem primaryText={message.student3} rightIcon={<p>{message.data3}</p>} />
+                {message.data1 !== 0 && <ListItem primaryText={message.student1} rightIcon={<p>{message.data1}</p>} />}
+                {message.data2 !== 0 && <ListItem primaryText={message.student2} rightIcon={<p>{message.data2}</p>} />}
+                {message.data3 !== 0 && <ListItem primaryText={message.student3} rightIcon={<p>{message.data3}</p>} />}
               </List>
             </List>
           </div>
