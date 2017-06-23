@@ -24,6 +24,7 @@ export default class Main extends Component {
       admin: false,
       teacherSelecter: '',
       userSelectedMessages: [],
+      multiple: false,
     };
   }
 
@@ -32,6 +33,7 @@ export default class Main extends Component {
     if (userData !== null && userData.schools !== undefined) {
       this.setState({ loading: true });
       const dataMessages = userData.schools[Object.keys(userData.schools)[0]].messages !== undefined ? Object.keys(userData.schools[Object.keys(userData.schools)[0]].messages) : [];
+      if (Object.values(userData.schools).length > 1) this.setState({ multiple: true });
       if (Object.values(userData.schools)[0].admin) {
         database.child('schools').child(Object.keys(userData.schools)[0]).on('value', data =>
           this.setState({
@@ -80,39 +82,13 @@ export default class Main extends Component {
           admin: false,
           school: Object.keys(userData.schools)[0],
           loading: false,
+          userData,
         });
       }
     }
     this.setState({ loading: false });
     // this.orderMessages();
   }
-
-  // orderMessages() {
-  //   const { database } = this.props;
-  //   database.child('messages').on('value', (data) => {
-  //     const update = {};
-  //     data.forEach((messageId) => {
-  //       if (messageId.val().table !== undefined) update[`messages/${messageId.key}/table/title`] = null;
-  //       if (messageId.val().table !== undefined) update[`messages/${messageId.key}/tableTitle`] = 'Tabla de datos';
-  //     });
-  //     console.log(update);
-  //     database.update(update);
-  //   });
-  // database.child('users').on('value', (data) => {
-  //   const update = {};
-  //   data.forEach((messageId) => {
-  //     update[`users/${messageId.key}/createDate`] = moment().unix();
-  //   });
-  //   database.update(update);
-  // });
-  // database.child('schools').on('value', (data) => {
-  //   const update = {};
-  //   data.forEach((messageId) => {
-  //     update[`schools/${messageId.key}/createDate`] = moment().unix();
-  //   });
-  //   database.update(update);
-  // });
-  // }
 
   selectUser(userKey) {
     const { database } = this.props;
@@ -123,9 +99,29 @@ export default class Main extends Component {
     );
   }
 
+  selectMultiSchool(key) {
+    const { userData, database } = this.props;
+    if (Object.values(userData.schools)[key].admin) {
+      this.setState({ loading: true });
+      database.child('schools').child(key).on('value', data =>
+        this.setState({
+          messagesKey: userData.schools[key].messages !== undefined ? Object.keys(userData.schools[key].messages) : [],
+          school: key,
+          users: Object.assign({}, data.val().admins, data.val().teachers),
+          loading: false,
+        }),
+      );
+    } else {
+      this.setState({
+        messagesKey: userData.schools[key].messages !== undefined ? Object.keys(userData.schools[key].messages) : [],
+        school: key,
+      });
+    }
+  }
+
   render() {
-    const { loading, tab, messagesKey, teacherSelecter, admin, users, userSelectedMessages } = this.state;
-    const { user } = this.props;
+    const { loading, tab, messagesKey, teacherSelecter, admin, users, userSelectedMessages, multiple, school } = this.state;
+    const { user, userData } = this.props;
     if (!loading && !user) return <Redirect to={'/login'} />;
     return (
       <div>
@@ -149,9 +145,18 @@ export default class Main extends Component {
               <center><CircularProgress /></center>
             :
               <div>
+                {multiple &&
+                  <div>
+                    <p>Tienes mas de un colegio asociado. Selecciona el colegio que quieres ver:</p>
+                    <SelectField value={school} floatingLabelFixed hintText="Selecciona tu colegio" floatingLabelText="Colegio" onChange={(event, textoVal, key) => this.setState({ messagesKey: userData.schools[key].messages !== undefined ? Object.keys(userData.schools[key].messages) : [], school: key })} fullWidth >
+                      {userData && Object.entries(userData.schools).map(([id, schoolId]) =>
+                        <MenuItem key={id} value={id} primaryText={schoolId.name} />,
+                      )}
+                    </SelectField>
+                  </div>
+                }
                 {tab ?
                   <div>
-                    <hr />
                     {messagesKey.map(message => <Aviso key={message} messageKey={message} {...this.props} />)}
                     {messagesKey.length < 1 &&
                       <Paper style={{ width: '95%', padding: 10 }}>

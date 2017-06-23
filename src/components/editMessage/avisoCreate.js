@@ -25,6 +25,11 @@ export default class AvisoCreate extends Component {
       apoyar: orange500,
       corregir: red500,
       conservar: yellow500,
+      Soporte: lightBlue500,
+      Felicitar: green500,
+      Apoyar: orange500,
+      Corregir: red500,
+      Conservar: yellow500,
     };
     const chooseIcon = {
       corregir: 'warning',
@@ -32,6 +37,11 @@ export default class AvisoCreate extends Component {
       felicitar: 'thumb_up',
       soporte: 'info',
       conservar: 'sync',
+      Corregir: 'warning',
+      Apoyar: 'add_alert',
+      Felicitar: 'thumb_up',
+      Soporte: 'info',
+      Conservar: 'sync',
     };
     if (users[message.userId] === undefined) return <Paper style={{ margin: 10 }} ><h3>Error en userId: <p><strong>{message.userId}</strong></p></h3></Paper>;
     else if (schools[message.schoolId] === undefined) return <Paper style={{ margin: 10 }} ><h3>Error en schoolId: <p><strong>{message.schoolId}</strong></p></h3></Paper>;
