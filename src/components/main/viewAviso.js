@@ -39,6 +39,11 @@ export default class ViewAviso extends Component {
       apoyar: orange500,
       corregir: red500,
       conservar: yellow500,
+      Soporte: lightBlue500,
+      Felicitar: green500,
+      Apoyar: orange500,
+      Corregir: red500,
+      Conservar: yellow500,
     };
     const chooseIcon = {
       corregir: 'warning',
@@ -46,6 +51,11 @@ export default class ViewAviso extends Component {
       felicitar: 'thumb_up',
       soporte: 'info',
       conservar: 'sync',
+      Corregir: 'warning',
+      Apoyar: 'add_alert',
+      Felicitar: 'thumb_up',
+      Soporte: 'info',
+      Conservar: 'sync',
     };
     return (
       <Paper style={{ margin: 10 }}>

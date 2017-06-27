@@ -13,6 +13,7 @@ import CircularProgress from 'material-ui/CircularProgress';
 
 import Navbar from './components/navbar';
 import LandingPage from './components/landingPage';
+import LandingPage2 from './components/landingPage2';
 import Login from './components/login';
 import MyUser from './components/myUser';
 
@@ -70,6 +71,7 @@ export default class App extends Component {
       update: true,
       database: firebase.database().ref(),
       auth: firebase.auth(),
+      config,
     };
   }
 
@@ -105,12 +107,14 @@ export default class App extends Component {
           <div>
             <Navbar {...this.state} onLogout={() => this.logout()} />
             <Route exact path="/" render={props => <LandingPage {...this.state} {...props} />} />
+            <Route exact path="/landingPage" render={props => <LandingPage2 {...this.state} {...props} />} />
             <Route path="/login" render={props => <Login {...this.state} {...props} onLogin={() => this.login()} />} />
             {(update && !user) ?
               <center style={{ marginTop: '20%' }}><CircularProgress size={120} /></center>
               :
               <div>
                 <Route path="/myUser" render={props => <MyUser {...this.state} {...props} onLogin={() => this.login()} />} />
+                {userAdmin && <Route exact path="/admin/" render={() => this.tester()} /> }
                 {userAdmin && <Route exact path="/admin/users/create" render={props => <EditUser editable={false} {...this.state} {...props} />} />}
                 {userAdmin && <Route exact path="/admin/users/edit/:isAdmin/:userId" render={props => <EditUser editable {...this.state} {...props} />} />}
                 {userAdmin && <Route exact path="/admin/users" render={props => <ViewUsers {...this.state} {...props} />} />}

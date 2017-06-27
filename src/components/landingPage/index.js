@@ -17,9 +17,9 @@ export default class LandingPage extends Component {
         <header className="masthead">
           <div className="container">
             <div className="intro-text">
-              <div className="intro-heading">K I M C H E</div>
-              <div className="intro-lead-in">Información que transforma</div>
-              <a href="#services" className="btn btn-xl">¡empecemos!</a>
+              <div className="intro-heading">Que el apoyo para tus estudiantes no llegue tarde!</div>
+              <a href="#services" className="btn btn-xl">Inicia Sesion!</a>
+              <a href="#services" className="btn btn-xl">Suscrubete!</a>
             </div>
           </div>
         </header>
