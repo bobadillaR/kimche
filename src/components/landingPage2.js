@@ -1,9 +1,13 @@
 import React from 'react';
 import Parallax from 'react-springy-parallax';
 import { Row, Col } from 'react-flexbox-grid';
+import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
+import RaisedButton from 'material-ui/RaisedButton';
 import { CardMedia, CardTitle } from 'material-ui/Card';
 import YouTube from 'react-youtube';
+import { cyan500 } from 'material-ui/styles/colors';
+import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 
 import imgPizarra from '../img/backgroundLanding.jpg';
 import imgReact from '../img/react.svg';
@@ -14,12 +18,16 @@ import imgInter from '../img/interOperadidad.jpg';
 import imgEducationApp from '../img/educationApp.jpg';
 import imgEducationIntegration from '../img/educationIntegration.jpg';
 import imgEducationFollow from '../img/educationFollow.jpg';
+import imgTeamKimche from '../img/teamKimche.jpg';
+import imgRuta5 from '../img/ruta5.jpg';
+import imgCentro from '../img/centroUc.jpg';
+import imgKimcheContact from '../img/kimcheContact.jpg';
 
 export default class extends React.Component {
   render() {
     const { width } = this.props;
     return (
-      <Parallax ref={ref => (this.parallax = ref)} pages={8} scrolling style={{ backgroundColor: '#E9E9E9' }}>
+      <Parallax ref={ref => (this.parallax = ref)} pages={7} scrolling style={{ backgroundColor: '#E9E9E9' }}>
         <Parallax.Layer offset={0} speed={1} style={{ backgroundImage: `url(${imgPizarra})`, backgroundSize: 'cover' }} />
 
         <Parallax.Layer offset={0.1} speed={-0.5} style={{ justifyContent: 'space-around', display: 'flex' }} >
@@ -99,7 +107,7 @@ export default class extends React.Component {
         </Parallax.Layer>
         <Parallax.Layer offset={2.1} speed={0} >
           <center style={{ paddingBottom: 20 }}><h1>Las mejores decisiones se toman con informacon a tiempo</h1></center>
-          <div className="animated fadeInUp" style={{ margin: 20 }}>
+          <div className="animated fadeInUp" style={{ margin: 40 }}>
             <Col md={10} mdOffset={1} >
               <Paper zDepth={3}>
                 <Row around="md">
@@ -119,7 +127,7 @@ export default class extends React.Component {
               </Paper>
             </Col>
           </div>
-          <div className="animated fadeInUp" style={{ margin: 20 }}>
+          <div className="animated fadeInUp" style={{ margin: 40 }}>
             <Col md={10} mdOffset={1} >
               <Paper zDepth={3}>
                 <Row around="md">
@@ -139,7 +147,7 @@ export default class extends React.Component {
               </Paper>
             </Col>
           </div>
-          <div className="animated fadeInUp" style={{ margin: 20 }}>
+          <div className="animated fadeInUp" style={{ margin: 40 }}>
             <Col md={10} mdOffset={1} >
               <Paper zDepth={3}>
                 <Row around="md">
@@ -159,7 +167,7 @@ export default class extends React.Component {
               </Paper>
             </Col>
           </div>
-          <div className="animated fadeInUp" style={{ margin: 20 }}>
+          <div className="animated fadeInUp" style={{ margin: 40 }}>
             <Col md={10} mdOffset={1} >
               <Paper zDepth={3}>
                 <Row around="md">
@@ -179,7 +187,7 @@ export default class extends React.Component {
               </Paper>
             </Col>
           </div>
-          <center><h2>Descubrenos</h2></center>
+          <center style={{ marginTop: '5%' }}><h2>Descubrenos</h2></center>
           <hr />
           <center>
             <YouTube
@@ -190,19 +198,56 @@ export default class extends React.Component {
               }}
             />
           </center>
-          <center><h2>Instagram/BLOG</h2></center>
+          <center style={{ marginTop: '5%' }}><h2>Instagram/BLOG</h2></center>
           <hr />
-          <center><h2>Nosotros</h2></center>
+          <center style={{ marginTop: '5%' }}><h2>Team Kimche</h2></center>
           <hr />
-          <center><h2>Formulario</h2></center>
+          <center><img alt="dada" src={imgTeamKimche} style={{ display: 'flex', height: '100%' }} /></center>
+          <div>
+            <Col md={8} mdOffset={2} xs={12}>
+              <Row around="md" style={{ backgroundColor: 'white', margin: 20 }}>
+                <Col><img alt="dadas" src={imgCentro} /></Col>
+                <Col><img alt="dadas" src={imgKimcheContact} /></Col>
+                <Col><img alt="dadas" src={imgRuta5} /></Col>
+              </Row>
+            </Col>
+          </div>
+          <center style={{ marginTop: '5%' }}><h2>Encuentranos</h2></center>
           <hr />
-          <center><h2>Footer</h2></center>
+          <form onSubmit={e => this.login(e)}>
+            <Col md={8} mdOffset={2} xs={10} xsOffset={1}>
+              <Paper zDepth={3}>
+                <Row around="md" >
+                  <Col md={4} style={{ backgroundColor: 'rgba(44, 62, 80,1.0)', padding: 25, color: 'white', textAlign: 'center' }}>
+                    <h3>Ubicación</h3>
+                    <hr />
+                    <p>Centro de Innovación UC Anacleto Angelini</p>
+                    <p>Av. Vicuña Mackenna 4860, Macul, Santiago, Chile</p>
+                    <GettingStartedGoogleMap containerElement={<div style={{ width: '100%', height: 200, marginBottom: 15 }} />} mapElement={<div style={{ width: '100%', height: 200 }} />} />
+                    <a href="mailto:info@kimche.co?Subject=Hola%20Kimche" >info@kimche.co</a>
+                  </Col>
+                  <Col md={8} style={{ padding: 25 }}>
+                    <h3>Contactanos</h3>
+                    <hr />
+                    <TextField hintText="Tu nombre" floatingLabelText="Nombre" onChange={(event, name) => this.setState({ name })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: cyan500, fontSize: 22 }} />
+                    <TextField hintText="Tu email" floatingLabelText="Mail de contacto" onChange={(event, mail) => this.setState({ mail })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: cyan500, fontSize: 22 }} />
+                    <TextField hintText="Tu Institución educacional" floatingLabelText="Institución educacional o colegio" onChange={(event, name) => this.setState({ name })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: cyan500, fontSize: 22 }} />
+                    <TextField multiLine hintText="Escribe tu pregunta..." floatingLabelText="Que te gustaria saber" onChange={(event, name) => this.setState({ name })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: cyan500, fontSize: 22 }} />
+                    <RaisedButton label="Enviar" primary style={{ align: 'right' }} />
+                  </Col>
+                </Row>
+              </Paper>
+            </Col>
+          </form>
           <hr />
         </Parallax.Layer>
-        {/* <Parallax.Layer offset={1} speed={1} style={{ backgroundColor: 'rgba(236, 240, 241,1.0)' }} /> */}
-        {/* <Parallax.Layer offset={2} speed={0} style={{ backgroundColor: '#805E73' }} /> */}
-        {/* <Parallax.Layer offset={3} speed={0} style={{ backgroundColor: '#87BCDE' }} /> */}
       </Parallax>
     );
   }
 }
+
+const GettingStartedGoogleMap = withGoogleMap(() => (
+  <GoogleMap defaultZoom={15} defaultCenter={{ lat: -33.497905, lng: -70.615267 }} >
+    <Marker position={{ lat: -33.497905, lng: -70.615267 }} />
+  </GoogleMap>
+));
