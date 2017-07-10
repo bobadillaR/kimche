@@ -38,7 +38,7 @@ class Navbar extends Component {
   }
 
   renderMain() {
-    const { mobileDetect, user, userData, userAdmin } = this.props;
+    const { mobileDetect, user, userData, userAdmin, width } = this.props;
     return (
       <ToolbarGroup>
         <ToolbarSeparator style={{ marginRight: 10 }} />
@@ -46,7 +46,7 @@ class Navbar extends Component {
           <div>
             {userAdmin ?
               <Link to="/admin">
-                {mobileDetect ?
+                {mobileDetect || width < 773 ?
                   <FloatingActionButton mini>
                     <FontIcon className="material-icons" >star</FontIcon>
                   </FloatingActionButton>
@@ -56,7 +56,7 @@ class Navbar extends Component {
               </Link>
               :
               <Link to="/main">
-                {mobileDetect ?
+                {mobileDetect || width < 773 ?
                   <FloatingActionButton mini>
                     <FontIcon className="material-icons" >face</FontIcon>
                   </FloatingActionButton>
@@ -68,7 +68,7 @@ class Navbar extends Component {
           </div>
           :
           <Link to="/login">
-            {mobileDetect ?
+            {mobileDetect || width < 773 ?
               <FloatingActionButton mini>
                 <FontIcon className="material-icons" >person</FontIcon>
               </FloatingActionButton>
@@ -82,19 +82,37 @@ class Navbar extends Component {
   }
 
   renderUser() {
-    const { userAdmin, userData } = this.props;
+    const { userAdmin, userData, width, mobileDetect } = this.props;
     return (
       <ToolbarGroup>
         {userAdmin &&
           <ToolbarGroup>
             <Link to="/admin/users">
-              <FlatButton style={{ marginLeft: 0, marginRight: 0 }} label="Usuarios" primary icon={<FontIcon className="material-icons" >person</FontIcon>} />
+              {mobileDetect || width < 773 ?
+                <FloatingActionButton mini>
+                  <FontIcon className="material-icons" >person</FontIcon>
+                </FloatingActionButton>
+                :
+                <FlatButton style={{ marginLeft: 0, marginRight: 0 }} label="Usuarios" primary icon={<FontIcon className="material-icons" >person</FontIcon>} />
+              }
             </Link>
             <Link to="/admin/schools">
-              <FlatButton style={{ marginLeft: 0, marginRight: 0 }} label="Colegios" primary icon={<FontIcon className="material-icons" >school</FontIcon>} />
+              {mobileDetect || width < 773 ?
+                <FloatingActionButton mini>
+                  <FontIcon className="material-icons" >school</FontIcon>
+                </FloatingActionButton>
+                :
+                <FlatButton style={{ marginLeft: 0, marginRight: 0 }} label="Colegios" primary icon={<FontIcon className="material-icons" >school</FontIcon>} />
+              }
             </Link>
             <Link to="/admin/messages">
-              <FlatButton style={{ marginLeft: 0, marginRight: 0 }} label="Avisos" primary icon={<FontIcon className="material-icons" >message</FontIcon>} />
+              {mobileDetect || width < 773 ?
+                <FloatingActionButton mini>
+                  <FontIcon className="material-icons" >message</FontIcon>
+                </FloatingActionButton>
+                :
+                <FlatButton style={{ marginLeft: 0, marginRight: 0 }} label="Avisos" primary icon={<FontIcon className="material-icons" >message</FontIcon>} />
+              }
             </Link>
           </ToolbarGroup>
         }
@@ -124,7 +142,7 @@ class Navbar extends Component {
       else toImage = '/main';
     }
     return (
-      <Toolbar>
+      <Toolbar style={{ position: 'fixed', top: 0, width: '100%', zIndex: 20 }}>
         <Link to={toImage} >
           <img alt="dsadas" src={logo} height={40} style={{ marginTop: 8 }} />
         </Link>

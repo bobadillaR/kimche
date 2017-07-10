@@ -18,8 +18,8 @@ export default class LandingPage extends Component {
           <div className="container">
             <div className="intro-text">
               <div className="intro-heading">Que el apoyo para tus estudiantes no llegue tarde!</div>
-              <a href="#services" className="btn btn-xl">Inicia Sesion!</a>
-              <a href="#services" className="btn btn-xl">Suscrubete!</a>
+              {/* <a href="#services" className="btn btn-xl">Inicia Sesion!</a> */}
+              {/* <a href="#services" className="btn btn-xl">Suscrubete!</a> */}
             </div>
           </div>
         </header>

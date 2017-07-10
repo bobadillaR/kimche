@@ -72,10 +72,13 @@ export default class App extends Component {
       database: firebase.database().ref(),
       auth: firebase.auth(),
       config,
+      height: window.innerHeight,
+      width: window.innerWidth,
     };
   }
 
   componentWillMount() {
+    window.addEventListener('resize', () => this.setState({ height: window.innerHeight, width: window.innerWidth }));
     this.login();
   }
 
@@ -107,14 +110,14 @@ export default class App extends Component {
           <div>
             <Navbar {...this.state} onLogout={() => this.logout()} />
             <Route exact path="/" render={props => <LandingPage {...this.state} {...props} />} />
-            <Route exact path="/landingPage" render={props => <LandingPage2 {...this.state} {...props} />} />
+            <Route path="/landingPage" render={props => <LandingPage2 {...this.state} {...props} />} />
             <Route path="/login" render={props => <Login {...this.state} {...props} onLogin={() => this.login()} />} />
             {(update && !user) ?
               <center style={{ marginTop: '20%' }}><CircularProgress size={120} /></center>
               :
               <div>
                 <Route path="/myUser" render={props => <MyUser {...this.state} {...props} onLogin={() => this.login()} />} />
-                {userAdmin && <Route exact path="/admin/" render={() => this.tester()} /> }
+                {/* {userAdmin && <Route exact path="/admin/" render={() => this.tester()} /> } */}
                 {userAdmin && <Route exact path="/admin/users/create" render={props => <EditUser editable={false} {...this.state} {...props} />} />}
                 {userAdmin && <Route exact path="/admin/users/edit/:isAdmin/:userId" render={props => <EditUser editable {...this.state} {...props} />} />}
                 {userAdmin && <Route exact path="/admin/users" render={props => <ViewUsers {...this.state} {...props} />} />}
