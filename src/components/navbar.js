@@ -142,7 +142,7 @@ class Navbar extends Component {
       else toImage = '/main';
     }
     return (
-      <Toolbar style={{ position: 'fixed', top: 0, width: '100%', zIndex: 20 }}>
+      <Toolbar style={{ width: '100%', zIndex: 20 }}>
         <Link to={toImage} >
           <img alt="dsadas" src={logo} height={40} style={{ marginTop: 8 }} />
         </Link>
