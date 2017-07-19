@@ -109,7 +109,7 @@ export default class App extends Component {
         <MuiThemeProvider muiTheme={muiTheme} style={{ margin: 0 }}>
           <div>
             <Navbar {...this.state} onLogout={() => this.logout()} />
-            <Route path="/" render={props => <LandingPage2 {...this.state} {...props} />} />
+            <Route exact path="/" render={props => <LandingPage2 {...this.state} {...props} />} />
             <Route path="/login" render={props => <Login {...this.state} {...props} onLogin={() => this.login()} />} />
             {(update && !user) ?
               <center style={{ marginTop: '20%' }}><CircularProgress size={120} /></center>

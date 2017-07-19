@@ -277,7 +277,7 @@ export default class extends React.Component {
         </div>
 
         <div style={{ backgroundColor: 'rgba(52, 73, 94,1.0)', paddingTop: '10%', paddingBottom: '10%' }} >
-          <Col md={10} mdOffset={1} >
+          <Col xs={10} xsOffset={1} >
             <center><h1 style={{ color: 'white' }}>Descubre la gestion preventiva</h1></center>
             <center><p style={{ paddingBottom: 40, fontStyle: 'italic', fontSize: 20, color: 'white' }}>~ La nueva forma de coordinar las acciones de tu escuela ~</p></center>
             <Paper zDepth={3} style={{ marginLeft: '1%' }}>
@@ -288,7 +288,7 @@ export default class extends React.Component {
               </CardMedia>
             </Paper>
           </Col>
-          <Col md={10} mdOffset={1} style={{ paddingTop: '5%', paddingBottom: '5%' }} >
+          <Col xs={10} xsOffset={1} style={{ paddingTop: '5%', paddingBottom: '5%' }} >
             <Paper zDepth={3} >
               <CardMedia
                 overlay={<CardTitle title={<center style={{ fontSize: 26 }}>Apoyo Incremental</center>} subtitle={<center><p style={{ color: 'white', fontSize: 18 }}>Integra el esfuerzo de los profesores en aquellos niños que más lo necesitan.</p></center>} />}
@@ -297,7 +297,7 @@ export default class extends React.Component {
               </CardMedia>
             </Paper>
           </Col>
-          <Col md={10} mdOffset={1} >
+          <Col xs={10} xsOffset={1} >
             <Paper zDepth={3}>
               <CardMedia
                 overlay={<CardTitle title={<center style={{ fontSize: 26 }}>Análisis personalizado</center>} subtitle={<center><p style={{ color: 'white', fontSize: 18 }}>Libera la carga docente, con el envío de información práctica para cada profesor.</p></center>} />}
@@ -313,9 +313,9 @@ export default class extends React.Component {
             <p style={{ paddingBottom: 40, fontStyle: 'italic', fontSize: 20 }}>~ Enterate de lo que hacemos ~</p>
           </center>
           <div className="animated fadeInUp" >
-            <Col md={10} mdOffset={1} >
+            <Col xs={10} xsOffset={1} >
               <Row>
-                <Col md={3} xs={12} >
+                <Col xs={12} >
                   <Paper zDepth={3}>
                     <CardMedia>
                       <img alt="dada" src={imgInter} style={{ display: 'flex', height: height * 0.2 }} />
@@ -375,9 +375,9 @@ export default class extends React.Component {
             <Col xs={8} xsOffset={2}>
               <center><img alt="dadas" src={imgKimcheContact} style={{ margin: 20 }} /></center>
               <Row style={{ marginTop: 20, marginBottom: 20, justifyContent: 'center', alignItems: 'center' }}>
-                <Col md={3} ><img alt="dadas" src={imgCentro} style={{ width: '100%' }} /></Col>
-                <Col md={3}><img alt="dadas" src={imgCorfo} style={{ width: '100%' }} /></Col>
-                <Col md={3} ><img alt="dadas" src={imgRuta5} style={{ width: '100%' }} /></Col>
+                <Col><img alt="dadas" src={imgCentro} style={{ width: '100%' }} /></Col>
+                <Col><img alt="dadas" src={imgCorfo} style={{ width: '100%', marginTop: 30, marginBottom: 30 }} /></Col>
+                <Col><img alt="dadas" src={imgRuta5} style={{ width: '100%' }} /></Col>
               </Row>
             </Col>
           </div>
