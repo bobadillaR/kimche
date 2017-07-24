@@ -66,12 +66,13 @@ export default class ViewAviso extends Component {
         onTouchTap={() => this.send()}
       />,
     ];
+    console.log(message);
     return (
       <div style={{ marginTop: 15 }}>
         {loading ?
           <center><CircularProgress size={80} /></center>
         :
-          <Card onClick={() => this.setState({ active: !this.state.active })}>
+          <Card onClick={() => this.setState({ active: true })}>
             <CardHeader
               avatar={<FontIcon color="white" className="material-icons" >{chooseIcon[message.tipo]}</FontIcon>}
               style={{ backgroundColor: chooseColor[message.tipo] }}
@@ -82,13 +83,13 @@ export default class ViewAviso extends Component {
             />
             <Dialog open={active} actions={actions} autoScrollBodyContent onRequestClose={() => this.setState({ active: false, activeText: [false, false, false] })} title={message.text}>
               {message.table && message.table.filter(a => a !== 'title').map((table, index) => {
-                if (message.tipo === 'apoyo' || message.tipo === 'Apoyo' || message.tipo === 'corregir' || message.tipo === 'Corregir') {
+                if (message.tipo === 'apoyar' || message.tipo === 'Apoyar' || message.tipo === 'corregir' || message.tipo === 'Corregir') {
                   if(message.tema === 'Asistencia') {
                     return (
                       <div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <p>{table.student}</p>
-                          <small>Asistencia: {table.data}</small>
+                          <p>{message.table[index].student}</p>
+                          <small>Asistencia: {message.table[index].data}</small>
                         </div>
                         <Checkbox disabled checked={checkBox[index][0]} label="Problemas Familiares" onCheck={(event, value) => { checkBox[index][0] = value; this.setState({ checkBox }); }} />
                         <Checkbox disabled checked={checkBox[index][1]} label="Responsabilidad" onCheck={(event, value) => { checkBox[index][1] = value; this.setState({ checkBox }); }} />
@@ -101,8 +102,8 @@ export default class ViewAviso extends Component {
                     return (
                       <div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <p>{message.table.student}</p>
-                          <small>Nota: {message.table.data}</small>
+                          <p>{message.table[index].student}</p>
+                          <small>Nota: {message.table[index].data}</small>
                         </div>
                         <Checkbox disabled checked={checkBox[index][0]} label="Desmotivación" onCheck={(event, value) => { checkBox[index][0] = value; this.setState({ checkBox }); }} />
                         <Checkbox disabled checked={checkBox[index][1]} label="Responsabilidad" onCheck={(event, value) => { checkBox[index][1] = value; this.setState({ checkBox }); }} />

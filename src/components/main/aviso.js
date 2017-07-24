@@ -80,6 +80,7 @@ export default class Aviso extends Component {
         onTouchTap={() => this.send()}
       />,
     ];
+    console.log(message);
     return (
       <div style={{ marginTop: 10 }}>
         {loading ? <center><CircularProgress size={80} /></center>
@@ -102,7 +103,7 @@ export default class Aviso extends Component {
         </Card>}
         <Dialog open={active} actions={actions} autoScrollBodyContent onRequestClose={() => this.setState({ active: false, activeText: [false, false, false] })} title={message.text}>
           {message.table && message.table.filter(a => a !== 'title').map((table, index) => {
-            if (message.tipo === 'apoyo' || message.tipo === 'Apoyo' || message.tipo === 'corregir' || message.tipo === 'Corregir') {
+            if (message.tipo === 'apoyar' || message.tipo === 'Apoyar' || message.tipo === 'corregir' || message.tipo === 'Corregir') {
               if (message.tema === 'Asistencia') {
                 return (
                   <div>
