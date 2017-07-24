@@ -13,6 +13,7 @@ import Divider from 'material-ui/Divider';
 import { cyan500 } from 'material-ui/styles/colors';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
+import moment from 'moment';
 
 import logo from '../components/landingPage/img/logo.png';
 
@@ -34,6 +35,7 @@ class Navbar extends Component {
       name: userData.name,
       text: supportText,
       mail: user.email,
+      createDate: moment().unix(),
     }).then(() => this.setState({ openSupport: false }));
   }
 
@@ -87,13 +89,22 @@ class Navbar extends Component {
       <ToolbarGroup>
         {userAdmin &&
           <ToolbarGroup>
+            <Link to="/admin/support">
+              {mobileDetect || width < 773 ?
+                <FloatingActionButton mini>
+                  <FontIcon className="material-icons" >info</FontIcon>
+                </FloatingActionButton>
+                :
+                <FlatButton style={{ marginLeft: 0, marginRight: 0 }} label="Soporte" primary icon={<FontIcon className="material-icons" >info</FontIcon>} />
+              }
+            </Link>
             <Link to="/admin/users">
               {mobileDetect || width < 773 ?
                 <FloatingActionButton mini>
-                  <FontIcon className="material-icons" >person</FontIcon>
+                  <FontIcon className="material-icons" >face</FontIcon>
                 </FloatingActionButton>
                 :
-                <FlatButton style={{ marginLeft: 0, marginRight: 0 }} label="Usuarios" primary icon={<FontIcon className="material-icons" >person</FontIcon>} />
+                <FlatButton style={{ marginLeft: 0, marginRight: 0 }} label="Usuarios" primary icon={<FontIcon className="material-icons" >face</FontIcon>} />
               }
             </Link>
             <Link to="/admin/schools">

@@ -8,6 +8,7 @@ import { CardMedia, CardTitle } from 'material-ui/Card';
 import YouTube from 'react-youtube';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 // import nodemailer from 'nodemailer';
+// import email from 'emailjs';
 
 import imgPizarra from '../img/backgroundLanding.jpg';
 import imgReact from '../img/react.svg';
@@ -74,7 +75,7 @@ export default class extends React.Component {
 
         <Parallax.Layer offset={1.1} speed={0} >
           <center><h2>Información que transforma</h2></center>
-          <center><p style={{ fontStyle: 'italic', fontSize: 20 }}>~ Como hacemos el cambio realidad ~</p></center>
+          <center><p style={{ fontStyle: 'italic', fontSize: 20 }}>~ Haciendo el cambio realidad ~</p></center>
         </Parallax.Layer>
         <Parallax.Layer offset={1.2} speed={1} >
           <center>
@@ -90,7 +91,7 @@ export default class extends React.Component {
 
         <Parallax.Layer offset={2} speed={0} style={{ backgroundColor: 'rgba(52, 73, 94,1.0)' }} />
         <Parallax.Layer offset={2.2} speed={0} >
-          <center><h1 style={{ color: 'white' }}>Descubre la gestion preventiva</h1></center>
+          <center><h1 style={{ color: 'white' }}>Descubre la gestión preventiva</h1></center>
           <center><p style={{ paddingBottom: 40, fontStyle: 'italic', fontSize: 20, color: 'white' }}>~ La nueva forma de coordinar las acciones de tu escuela ~</p></center>
         </Parallax.Layer>
         <Parallax.Layer offset={2.35} speed={1.5} >
@@ -136,7 +137,7 @@ export default class extends React.Component {
           </Col>
         </Parallax.Layer>
         <Parallax.Layer offset={3.1} speed={0}>
-          <center style={{ paddingBottom: 20 }}><h1>Las mejores decisiones se toman con informacon a tiempo</h1></center>
+          <center style={{ paddingBottom: 20 }}><h1>Las mejores decisiones se toman con información a tiempo</h1></center>
           <center><p style={{ paddingBottom: 40, fontStyle: 'italic', fontSize: 20 }}>~ Enterate de lo que hacemos ~</p></center>
         </Parallax.Layer>
         <Parallax.Layer offset={3.3} speed={1}>
@@ -151,7 +152,7 @@ export default class extends React.Component {
                     <div style={{ margin: '10%', minHeight: height * 0.3 }}>
                       <center><h3>Inter operabilidad</h3></center>
                       <hr style={{ borderTop: '5px solid' }} />
-                      <p style={{ textAlign: 'center' }}>No importa que sistema de gestion utilizas, no debes cambiar tu herramienta administrativa actual. Kimche opera con cualquiera de ella</p>
+                      <p style={{ textAlign: 'center' }}>No importa que sistema de gestión utilizas, no debes cambiar tu herramienta administrativa actual. Kimche opera con cualquiera de ella</p>
                     </div>
                   </Paper>
                 </Col>
@@ -163,7 +164,7 @@ export default class extends React.Component {
                     <div style={{ margin: '10%', minHeight: height * 0.3 }}>
                       <center><h3>Sistema de alerta</h3></center>
                       <hr style={{ borderTop: '5px solid' }} />
-                      <p style={{ textAlign: 'center' }}>Kimche monitorea continuamente la informacion de cada alumno para anticipar casos de riesgo escolar, que generalmente son identificados al final del semestre</p>
+                      <p style={{ textAlign: 'center' }}>Kimche monitorea continuamente la información de cada alumno para anticipar casos de riesgo escolar, que generalmente son identificados al final del semestre</p>
                     </div>
                   </Paper>
                 </Col>
@@ -217,8 +218,8 @@ export default class extends React.Component {
         </Parallax.Layer>
         <Parallax.Layer offset={5} speed={0} />
         <Parallax.Layer offset={5.1} speed={0} >
-          <center><h2>Encuentranos</h2></center>
-          <center><p style={{ paddingBottom: 40, fontStyle: 'italic', fontSize: 20 }}>~ Ponte en conctacto para saber mucho mas~</p></center>
+          <center><h2>Encuéntranos</h2></center>
+          <center><p style={{ paddingBottom: 40, fontStyle: 'italic', fontSize: 20 }}>~ Ponte en contacto para saber mucho mas~</p></center>
         </Parallax.Layer>
         <Parallax.Layer offset={5.3} speed={-0.3} >
           <form onSubmit={e => this.login(e)}>
@@ -234,13 +235,13 @@ export default class extends React.Component {
                     <a href="mailto:info@kimche.co?Subject=Hola%20Kimche" >info@kimche.co</a>
                   </Col>
                   <Col md={8} style={{ padding: 25 }}>
-                    <h3>Contactanos</h3>
+                    <h3>Contáctanos</h3>
                     <hr />
                     <TextField hintText="Tu nombre" floatingLabelText="Nombre" onChange={(event, name) => this.setState({ name })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
                     <TextField hintText="Tu email" floatingLabelText="Mail de contacto" onChange={(event, mail) => this.setState({ mail })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
                     <TextField hintText="Tu Institución educacional" floatingLabelText="Institución educacional o colegio" onChange={(event, name) => this.setState({ name })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
-                    <TextField multiLine hintText="Escribe tu pregunta..." floatingLabelText="Que te gustaria saber" onChange={(event, name) => this.setState({ name })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
-                    <RaisedButton onClick={() => console.log('send email')} label="Enviar" primary style={{ align: 'right' }} />
+                    <TextField multiLine hintText="Escribe tu pregunta..." floatingLabelText="Que te gustaria saber?" onChange={(event, name) => this.setState({ name })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
+                    <RaisedButton onClick={() => this.sendEmail()} label="Enviar" primary style={{ align: 'right' }} />
                   </Col>
                 </Row>
               </Paper>
@@ -263,7 +264,7 @@ export default class extends React.Component {
         <div style={{ height: height * 0.8, justifyContent: 'space-around', display: 'flex', flexDirection: 'column' }}>
           <center>
             <h2>Información que transforma</h2>
-            <p style={{ fontStyle: 'italic', fontSize: 20 }}>~ Como hacemos el cambio realidad ~</p>
+            <p style={{ fontStyle: 'italic', fontSize: 20 }}>~ Haciendo el cambio realidad ~</p>
           </center>
           <center>
             <YouTube
@@ -278,7 +279,7 @@ export default class extends React.Component {
 
         <div style={{ backgroundColor: 'rgba(52, 73, 94,1.0)', paddingTop: '10%', paddingBottom: '10%' }} >
           <Col xs={10} xsOffset={1} >
-            <center><h1 style={{ color: 'white' }}>Descubre la gestion preventiva</h1></center>
+            <center><h1 style={{ color: 'white' }}>Descubre la gestión preventiva</h1></center>
             <center><p style={{ paddingBottom: 40, fontStyle: 'italic', fontSize: 20, color: 'white' }}>~ La nueva forma de coordinar las acciones de tu escuela ~</p></center>
             <Paper zDepth={3} style={{ marginLeft: '1%' }}>
               <CardMedia
@@ -309,7 +310,7 @@ export default class extends React.Component {
         </div>
         <div style={{ paddingTop: '10%', paddingBottom: '10%' }}>
           <center>
-            <h1>Las mejores decisiones se toman con informacon a tiempo</h1>
+            <h1>Las mejores decisiones se toman con información a tiempo</h1>
             <p style={{ paddingBottom: 40, fontStyle: 'italic', fontSize: 20 }}>~ Enterate de lo que hacemos ~</p>
           </center>
           <div className="animated fadeInUp" >
@@ -323,7 +324,7 @@ export default class extends React.Component {
                     <div style={{ margin: '10%', minHeight: height * 0.3 }}>
                       <center><h3>Inter operabilidad</h3></center>
                       <hr style={{ borderTop: '5px solid' }} />
-                      <p style={{ textAlign: 'center' }}>No importa que sistema de gestion utilizas, no debes cambiar tu herramienta administrativa actual. Kimche opera con cualquiera de ella</p>
+                      <p style={{ textAlign: 'center' }}>No importa que sistema de gestión utilizas, no debes cambiar tu herramienta administrativa actual. Kimche opera con cualquiera de ella</p>
                     </div>
                   </Paper>
                 </Col>
@@ -335,7 +336,7 @@ export default class extends React.Component {
                     <div style={{ margin: '10%', minHeight: height * 0.3 }}>
                       <center><h3>Sistema de alerta</h3></center>
                       <hr style={{ borderTop: '5px solid' }} />
-                      <p style={{ textAlign: 'center' }}>Kimche monitorea continuamente la informacion de cada alumno para anticipar casos de riesgo escolar, que generalmente son identificados al final del semestre</p>
+                      <p style={{ textAlign: 'center' }}>Kimche monitorea continuamente la información de cada alumno para anticipar casos de riesgo escolar, que generalmente son identificados al final del semestre</p>
                     </div>
                   </Paper>
                 </Col>
@@ -383,19 +384,19 @@ export default class extends React.Component {
           </div>
         </div>
         <div style={{ paddingTop: '10%', paddingBottom: '10%' }}>
-          <center><h2>Encuentranos</h2></center>
-          <center><p style={{ fontStyle: 'italic', fontSize: 20 }}>~ Ponte en conctacto para saber mucho mas~</p></center>
+          <center><h2>Encuéntranos</h2></center>
+          <center><p style={{ fontStyle: 'italic', fontSize: 20 }}>~ Ponte en contacto para saber mucho mas~</p></center>
           <form onSubmit={e => this.login(e)}>
             <Col md={8} mdOffset={2} xs={10} xsOffset={1}>
               <Paper zDepth={3}>
                 <div style={{ padding: 25 }}>
-                  <h3>Contactanos</h3>
+                  <h3>Contáctanos</h3>
                   <hr />
                   <TextField hintText="Tu nombre" floatingLabelText="Nombre" onChange={(event, name) => this.setState({ name })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
                   <TextField hintText="Tu email" floatingLabelText="Mail de contacto" onChange={(event, mail) => this.setState({ mail })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
                   <TextField hintText="Tu Institución educacional" floatingLabelText="Institución educacional" onChange={(event, name) => this.setState({ name })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
-                  <TextField multiLine hintText="Escribe tu pregunta..." floatingLabelText="Que te gustaria saber" onChange={(event, name) => this.setState({ name })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
-                  <RaisedButton onClick={() => console.log('send email')} label="Enviar" primary style={{ align: 'right' }} />
+                  <TextField multiLine hintText="Escribe tu pregunta..." floatingLabelText="Que te gustaria saber?" onChange={(event, name) => this.setState({ name })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
+                  <RaisedButton onClick={() => this.sendEmail()} label="Enviar" primary style={{ align: 'right' }} />
                 </div>
                 <div style={{ backgroundColor: 'rgba(44, 62, 80,1.0)', color: 'white', textAlign: 'center', padding: 25 }}>
                   <h3>Ubicación</h3>

@@ -12,8 +12,8 @@ import { grey800, white } from 'material-ui/styles/colors';
 import CircularProgress from 'material-ui/CircularProgress';
 
 import Navbar from './components/navbar';
-// import LandingPage from './components/landingPage';
 import LandingPage2 from './components/landingPage2';
+import Soporte from './components/soporte';
 import Login from './components/login';
 import MyUser from './components/myUser';
 
@@ -118,6 +118,7 @@ export default class App extends Component {
                 <Route path="/myUser" render={props => <MyUser {...this.state} {...props} onLogin={() => this.login()} />} />
                 {/* {userAdmin && <Route exact path="/admin/" render={() => this.tester()} /> } */}
                 {userAdmin && <Route exact path="/admin/users/create" render={props => <EditUser editable={false} {...this.state} {...props} />} />}
+                {userAdmin && <Route exact path="/admin/support" render={props => <Soporte editable={false} {...this.state} {...props} />} />}
                 {userAdmin && <Route exact path="/admin/users/edit/:isAdmin/:userId" render={props => <EditUser editable {...this.state} {...props} />} />}
                 {userAdmin && <Route exact path="/admin/users" render={props => <ViewUsers {...this.state} {...props} />} />}
                 {userAdmin && <Route exact path="/admin/schools/create" render={props => <EditSchool editable={false} {...this.state} {...props} />} />}

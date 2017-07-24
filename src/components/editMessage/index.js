@@ -35,6 +35,8 @@ export default class EditMessage extends Component {
       teachers: [],
       admins: [],
       tipoList: { felicitar: 'Felicitar', apoyar: 'Apoyar', corregir: 'Corregir', conservar: 'Conservar', soporte: 'Soporte' },
+      temaList: { asistencia: 'Asistencia', notas: 'Notas' },
+      tema: '',
       title: '',
       visibility: true,
       userId: '',
@@ -57,6 +59,7 @@ export default class EditMessage extends Component {
             messageId,
             texto: message.val().text || '',
             tipo: message.val().tipo || '',
+            tema: message.val().tema || '',
             title: message.val().title || '',
             school: message.val().schoolId || '',
             teachers: !message.val().admin ? message.val().userId : '',
@@ -77,7 +80,7 @@ export default class EditMessage extends Component {
 
   create() {
     const { database } = this.props;
-    const { texto, admins, teachers, school, tipo, title, schools, table, tableTitle } = this.state;
+    const { texto, admins, teachers, school, tipo, title, schools, table, tableTitle, tema } = this.state;
     if (texto && school && tipo) {
       this.setState({ loading: true });
       const update = {};
@@ -87,6 +90,7 @@ export default class EditMessage extends Component {
         update[`messages/${messageKey}/title`] = title;
         update[`messages/${messageKey}/text`] = texto;
         update[`messages/${messageKey}/tipo`] = tipo;
+        update[`messages/${messageKey}/tema`] = tema;
         update[`messages/${messageKey}/state`] = 0;
         update[`messages/${messageKey}/table`] = table;
         update[`messages/${messageKey}/tableTitle`] = tableTitle;
@@ -106,6 +110,7 @@ export default class EditMessage extends Component {
         update[`messages/${messageKey}/title`] = title;
         update[`messages/${messageKey}/text`] = texto;
         update[`messages/${messageKey}/tipo`] = tipo;
+        update[`messages/${messageKey}/tema`] = tema;
         update[`messages/${messageKey}/table`] = table;
         update[`messages/${messageKey}/tableTitle`] = tableTitle;
         update[`messages/${messageKey}/state`] = 0;
@@ -121,7 +126,7 @@ export default class EditMessage extends Component {
         update[`messages/${messageKey}/userName`] = schools[school].admins[userKey];
       });
       database.update(update)
-      .then(this.setState({ loading: false, alert: true, texto: '', title: '', school: '', teachers: [], admins: [], tipo: '', errorSchool: false, errorText: false, errorTitle: false, errorType: false, table: [], tableTitle: '' }));
+      .then(this.setState({ loading: false, alert: true, texto: '', title: '', school: '', teachers: [], admins: [], tipo: '', tema: '', errorSchool: false, errorText: false, errorTitle: false, errorType: false, table: [], tableTitle: '' }));
     } if (title === '') this.setState({ errorTitle: true });
     if (school === '') this.setState({ errorSchool: true });
     if (tipo === '') this.setState({ errorType: true });
@@ -162,7 +167,7 @@ export default class EditMessage extends Component {
   }
 
   renderSingle() {
-    const { loading, errorTitle, alert, texto, admins, school, teachers, schools, tipoList, tipo, title, visibility, errorType, errorSchool, table, tableTitle, que, porque, editDate } = this.state;
+    const { loading, errorTitle, alert, texto, admins, school, teachers, schools, tipoList, tipo, title, visibility, errorType, errorSchool, table, tableTitle, temaList, tema } = this.state;
     const { editable } = this.props;
     return (
       <Paper style={{ margin: '5%', padding: '3%', marginTop: !editable ? 0 : '5%' }} zDepth={4}>
@@ -216,25 +221,17 @@ export default class EditMessage extends Component {
             )}
           </SelectField>
         </div>
-        {editable &&
-          <div>
-            <div style={{ alignItems: 'center', display: 'flex' }}>
-              <FontIcon style={{ marginRight: '2%' }} className="material-icons" >question_answer</FontIcon>
-              <TextField disabled value={que} floatingLabelFixed floatingLabelText="Que" fullWidth />
-
-            </div>
-            <div style={{ alignItems: 'center', display: 'flex' }}>
-              <FontIcon style={{ marginRight: '2%' }} className="material-icons" >question_answer</FontIcon>
-              <TextField disabled value={porque} floatingLabelFixed floatingLabelText="Por que" fullWidth />
-            </div>
-            <div style={{ alignItems: 'center', display: 'flex' }}>
-              <FontIcon style={{ marginRight: '2%' }} className="material-icons" >timer</FontIcon>
-              <TextField disabled value={moment.unix(editDate).format('DD/MM/YY, hh:mm')} floatingLabelFixed floatingLabelText="Fecha de edicion" fullWidth />
-            </div>
+        {tipo !== 'soporte' &&
+          <div style={{ alignItems: 'center', display: 'flex' }}>
+            <FontIcon style={{ marginRight: '2%' }} className="material-icons" >message</FontIcon>
+            <SelectField value={tema} floatingLabelFixed hintText="Tema" floatingLabelText="Tema" onChange={(event, index, value) => this.setState({ tema: value })} fullWidth errorText={errorType && 'Campo obligatorio'}>
+              {Object.entries(temaList).map(([key, value]) =>
+                <MenuItem key={key} value={key} primaryText={value} />,
+              )}
+            </SelectField>
           </div>
         }
         <div>
-          <hr />
           <Table selectable={false} >
             <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
               <TableRow>

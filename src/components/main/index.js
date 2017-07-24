@@ -126,7 +126,7 @@ export default class Main extends Component {
     return (
       <div>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <Tabs style={{ width: '95%', marginTop: '10%' }} onChange={() => this.setState({ tab: !tab })}>
+          <Tabs style={{ width: '90%', marginTop: '10%' }} onChange={() => this.setState({ tab: !tab })}>
             <Tab
               icon={<FontIcon className="material-icons">chat</FontIcon>}
               label="Mis Avisos"
@@ -140,7 +140,7 @@ export default class Main extends Component {
           </Tabs>
         </div>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <Paper style={{ width: '95%', padding: 10 }}>
+          <div style={{ width: '90%' }}>
             {loading ?
               <center><CircularProgress /></center>
             :
@@ -159,14 +159,13 @@ export default class Main extends Component {
                   <div>
                     {messagesKey.map(message => <Aviso key={message} messageKey={message} {...this.props} />)}
                     {messagesKey.length < 1 &&
-                      <Paper style={{ width: '95%', padding: 10 }}>
+                      <Paper style={{ width: '90%' }}>
                         <h4>No tienes Mensajes Aun</h4>
                       </Paper>
                     }
                   </div>
                   :
                   <div>
-                    <hr />
                     <div style={{ alignItems: 'center', display: 'flex' }}>
                       <FontIcon style={{ marginRight: '2%' }} className="material-icons" >face</FontIcon>
                       <SelectField value={teacherSelecter} floatingLabelFixed hintText="Selecciona un profesor" floatingLabelText="Profesor" onChange={(event, textoVal, key) => this.selectUser(key)} fullWidth >
@@ -188,7 +187,7 @@ export default class Main extends Component {
                 }
               </div>
             }
-          </Paper>
+          </div>
         </div>
       </div>
     );
