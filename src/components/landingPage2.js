@@ -7,8 +7,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { CardMedia, CardTitle } from 'material-ui/Card';
 import YouTube from 'react-youtube';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
-// import nodemailer from 'nodemailer';
 // import email from 'emailjs';
+
 
 import imgPizarra from '../img/backgroundLanding.jpg';
 import imgReact from '../img/react.svg';
@@ -237,11 +237,17 @@ export default class extends React.Component {
                   <Col md={8} style={{ padding: 25 }}>
                     <h3>Contáctanos</h3>
                     <hr />
-                    <TextField hintText="Tu nombre" floatingLabelText="Nombre" onChange={(event, name) => this.setState({ name })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
-                    <TextField hintText="Tu email" floatingLabelText="Mail de contacto" onChange={(event, mail) => this.setState({ mail })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
-                    <TextField hintText="Tu Institución educacional" floatingLabelText="Institución educacional o colegio" onChange={(event, name) => this.setState({ name })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
-                    <TextField multiLine hintText="Escribe tu pregunta..." floatingLabelText="Que te gustaria saber?" onChange={(event, name) => this.setState({ name })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
-                    <RaisedButton onClick={() => this.sendEmail()} label="Enviar" primary style={{ align: 'right' }} />
+                    {/* <input type="email" name="email" placeholder="Your email" />
+                    <textarea name="colegio" placeholder="tu colegio" />
+                    <textarea name="message" placeholder="Your message" />
+                    <button type="submit">Send</button> */}
+                    <form method="POST" action="http://formspree.io/lucas@kimche.co">
+                      <TextField type="email" name="_replyto" hintText="Tu email" floatingLabelText="Mail de contacto" onChange={(event, mail) => this.setState({ mail })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
+                      <TextField name="nombre" hintText="Tu nombre" floatingLabelText="Nombre" onChange={(event, name) => this.setState({ name })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
+                      <TextField name="Institucion educacional" hintText="Tu Institución educacional" floatingLabelText="Institución educacional o colegio" onChange={(event, name) => this.setState({ name })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
+                      <TextField name="Mensaje" multiLine hintText="Escribe tu pregunta..." floatingLabelText="Que te gustaria saber?" onChange={(event, name) => this.setState({ name })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
+                      <RaisedButton type="submit" label="Enviar" primary style={{ align: 'right' }} />
+                    </form>
                   </Col>
                 </Row>
               </Paper>
@@ -391,12 +397,13 @@ export default class extends React.Component {
               <Paper zDepth={3}>
                 <div style={{ padding: 25 }}>
                   <h3>Contáctanos</h3>
-                  <hr />
-                  <TextField hintText="Tu nombre" floatingLabelText="Nombre" onChange={(event, name) => this.setState({ name })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
-                  <TextField hintText="Tu email" floatingLabelText="Mail de contacto" onChange={(event, mail) => this.setState({ mail })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
-                  <TextField hintText="Tu Institución educacional" floatingLabelText="Institución educacional" onChange={(event, name) => this.setState({ name })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
-                  <TextField multiLine hintText="Escribe tu pregunta..." floatingLabelText="Que te gustaria saber?" onChange={(event, name) => this.setState({ name })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
-                  <RaisedButton onClick={() => this.sendEmail()} label="Enviar" primary style={{ align: 'right' }} />
+                  <form method="POST" action="http://formspree.io/lucas@kimche.co">
+                    <TextField type="email" name="_replyto" hintText="Tu email" floatingLabelText="Mail de contacto" onChange={(event, mail) => this.setState({ mail })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
+                    <TextField name="nombre" hintText="Tu nombre" floatingLabelText="Nombre" onChange={(event, name) => this.setState({ name })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
+                    <TextField name="Institucion educacional" hintText="Tu Institución educacional" floatingLabelText="Institución educacional o colegio" onChange={(event, name) => this.setState({ name })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
+                    <TextField name="Mensaje" multiLine hintText="Escribe tu pregunta..." floatingLabelText="Que te gustaria saber?" onChange={(event, name) => this.setState({ name })} fullWidth errorText={false} floatingLabelFixed floatingLabelStyle={{ color: 'rgba(44, 62, 80,1.0)', fontSize: 22 }} />
+                    <RaisedButton type="submit" label="Enviar" primary style={{ align: 'right' }} />
+                  </form>
                 </div>
                 <div style={{ backgroundColor: 'rgba(44, 62, 80,1.0)', color: 'white', textAlign: 'center', padding: 25 }}>
                   <h3>Ubicación</h3>

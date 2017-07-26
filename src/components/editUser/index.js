@@ -88,7 +88,7 @@ export default class EditUser extends Component {
   }
 
   edit() {
-    const { name, email, cellphone, rut, admin, user } = this.state;
+    const { name, email, cellphone, rut, admin } = this.state;
     const { database, match } = this.props;
     if (name !== undefined && rut !== undefined && email !== undefined) {
       this.setState({ loading: true });
@@ -109,7 +109,6 @@ export default class EditUser extends Component {
   renderSingle() {
     const { loading, errorName, errorEmail, errorCelular, errorRut, admin, name, cellphone, rut, email, alert, visibility, schools } = this.state;
     const { editable } = this.props;
-    console.log(this.state.user);
     return (
       <Paper style={{ margin: '5%', padding: '3%', marginTop: !editable ? 0 : '5%' }} zDepth={4}>
         <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between' }}>
