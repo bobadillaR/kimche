@@ -88,17 +88,27 @@ export default class EditUser extends Component {
   }
 
   edit() {
-    const { name, email, cellphone, rut, admin } = this.state;
+    const { name, email, cellphone, rut, admin, user } = this.state;
     const { database, match } = this.props;
     if (name !== undefined && rut !== undefined && email !== undefined) {
       this.setState({ loading: true });
-      database.child(`/${match.params.isAdmin}/${match.params.userId}`).update({
+      const update = {};
+      update[`/${match.params.isAdmin}/${match.params.userId}`] = {
         name,
         visibility: true,
         rut,
         cellphone,
         admin,
-      })
+      };
+      user.schools.forEach((school) => {
+        update[`/schools/${school}/${school.admin ? 'admins' : 'teachers'}/${match.params.userId}`] = name;
+        if (school.messages !== undefined) {
+          school.messages.forEach((message) => {
+            update[`/messages/${message}/userName`] = name;
+          });
+        }
+      });
+      database.update(update)
       .then(this.setState({ loading: false, alert: true }))
       .catch(error => this.setState({ error }));
     } if (name === undefined) this.setState({ errorName: true });
