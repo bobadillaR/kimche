@@ -50,7 +50,8 @@ export default class Multple extends Component {
       update[`messages/${messageKey}/tipo`] = dataVal.tipo;
       update[`messages/${messageKey}/state`] = 0;
       update[`messages/${messageKey}/table`] = table;
-      update[`messages/${messageKey}/tableTitle`] = dataVal.tableTitle;
+      update[`messages/${messageKey}/tema`] = dataVal.tema;
+      // update[`messages/${messageKey}/tableTitle`] = dataVal.tableTitle;
       update[`messages/${messageKey}/admin`] = dataVal.admin === 1;
       update[`messages/${messageKey}/visibility`] = true;
       update[`messages/${messageKey}/createDate`] = moment().unix();

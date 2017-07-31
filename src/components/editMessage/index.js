@@ -93,7 +93,7 @@ export default class EditMessage extends Component {
         update[`messages/${messageKey}/tema`] = tema;
         update[`messages/${messageKey}/state`] = 0;
         update[`messages/${messageKey}/table`] = table;
-        update[`messages/${messageKey}/tableTitle`] = tableTitle;
+        // update[`messages/${messageKey}/tableTitle`] = tableTitle;
         update[`messages/${messageKey}/admin`] = false;
         update[`messages/${messageKey}/visibility`] = true;
         update[`messages/${messageKey}/createDate`] = moment().unix();
@@ -112,7 +112,7 @@ export default class EditMessage extends Component {
         update[`messages/${messageKey}/tipo`] = tipo;
         update[`messages/${messageKey}/tema`] = tema;
         update[`messages/${messageKey}/table`] = table;
-        update[`messages/${messageKey}/tableTitle`] = tableTitle;
+        // update[`messages/${messageKey}/tableTitle`] = tableTitle;
         update[`messages/${messageKey}/state`] = 0;
         update[`messages/${messageKey}/admin`] = true;
         update[`messages/${messageKey}/visibility`] = true;
