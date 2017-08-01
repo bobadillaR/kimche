@@ -42,7 +42,6 @@ export default class EditMessage extends Component {
       userId: '',
       redirect: false,
       table: [],
-      tableTitle: '',
       tab: true,
     };
   }
@@ -68,7 +67,6 @@ export default class EditMessage extends Component {
             message: message.val() || '',
             userId: message.val().userId || '',
             table: message.val().table || [],
-            tableTitle: message.val().tableTitle || '',
             que: message.val().que || '',
             porque: message.val().porque || '',
             editDate: message.val().editDate || '',
@@ -80,7 +78,7 @@ export default class EditMessage extends Component {
 
   create() {
     const { database } = this.props;
-    const { texto, admins, teachers, school, tipo, title, schools, table, tableTitle, tema } = this.state;
+    const { texto, admins, teachers, school, tipo, title, schools, table, tema } = this.state;
     if (texto && school && tipo) {
       this.setState({ loading: true });
       const update = {};
@@ -93,7 +91,6 @@ export default class EditMessage extends Component {
         update[`messages/${messageKey}/tema`] = tema;
         update[`messages/${messageKey}/state`] = 0;
         update[`messages/${messageKey}/table`] = table;
-        // update[`messages/${messageKey}/tableTitle`] = tableTitle;
         update[`messages/${messageKey}/admin`] = false;
         update[`messages/${messageKey}/visibility`] = true;
         update[`messages/${messageKey}/createDate`] = moment().unix();

@@ -41,9 +41,9 @@ export default class Multple extends Component {
     data.forEach((dataVal) => {
       const messageKey = database.child('school').push().key;
       const table = [
-        dataVal.data1 !== 0 && { data: dataVal.data1, student: dataVal.student1 },
-        dataVal.data2 !== 0 && { data: dataVal.data2, student: dataVal.student2 },
-        dataVal.data3 !== 0 && { data: dataVal.data3, student: dataVal.student3 },
+        dataVal.data1 !== undefined && { data: dataVal.data1, student: dataVal.student1 },
+        dataVal.data2 !== undefined && { data: dataVal.data2, student: dataVal.student2 },
+        dataVal.data3 !== undefined && { data: dataVal.data3, student: dataVal.student3 },
       ];
       update[`messages/${messageKey}/title`] = dataVal.title;
       update[`messages/${messageKey}/text`] = dataVal.text;
@@ -51,7 +51,6 @@ export default class Multple extends Component {
       update[`messages/${messageKey}/state`] = 0;
       update[`messages/${messageKey}/table`] = table;
       update[`messages/${messageKey}/tema`] = dataVal.tema;
-      // update[`messages/${messageKey}/tableTitle`] = dataVal.tableTitle;
       update[`messages/${messageKey}/admin`] = dataVal.admin === 1;
       update[`messages/${messageKey}/visibility`] = true;
       update[`messages/${messageKey}/createDate`] = moment().unix();
