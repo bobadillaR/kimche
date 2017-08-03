@@ -131,7 +131,7 @@ export default class EditMessage extends Component {
 
   edit() {
     const { database } = this.props;
-    const { texto, school, tipo, messageId, title, visibility, message, table } = this.state;
+    const { texto, school, tipo, messageId, title, visibility, message, table, tema } = this.state;
     if (texto && school && tipo) {
       this.setState({ loading: true });
       const update = {};
@@ -139,6 +139,7 @@ export default class EditMessage extends Component {
       update[`messages/${messageId}/visibility`] = visibility;
       update[`messages/${messageId}/text`] = texto;
       update[`messages/${messageId}/tipo`] = tipo;
+      update[`messages/${messageId}/tema`] = tema;
       update[`messages/${messageId}/table`] = table;
       if (message.school !== school) {
         update[`messages/${messageId}/school`] = school;
