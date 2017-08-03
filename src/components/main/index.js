@@ -122,6 +122,7 @@ export default class Main extends Component {
   render() {
     const { loading, tab, messagesKey, teacherSelecter, admin, users, userSelectedMessages, multiple, school } = this.state;
     const { user, userData } = this.props;
+    console.log(userSelectedMessages);
     if (!loading && !user) return <Redirect to={'/login'} />;
     return (
       <div>

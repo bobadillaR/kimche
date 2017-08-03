@@ -22,6 +22,7 @@ export default class ViewAviso extends Component {
         [false, false, false, false, ''],
         [false, false, false, false, ''],
       ],
+      active: false,
     };
   }
 
@@ -72,51 +73,52 @@ export default class ViewAviso extends Component {
         {loading ?
           <center><CircularProgress size={80} /></center>
         :
-          <Card onClick={() => this.setState({ active: true })}>
+          <Card onTouchTap={() => this.setState({ active: true })}>
             <CardHeader
               avatar={<FontIcon color="white" className="material-icons" >{chooseIcon[message.tipo]}</FontIcon>}
               style={{ backgroundColor: chooseColor[message.tipo] }}
               title={message.title}
               titleColor="white"
               subtitle={`Fecha de creacion: ${moment.unix(message.createDate).format('DD/MM/YY, hh:mm')}`}
-              actAsExpander
             />
-            <Dialog open={active} actions={actions} autoScrollBodyContent onRequestClose={() => this.setState({ active: false, activeText: [false, false, false] })} title={message.text}>
-              {message.table && message.table.filter(a => a !== 'title').map((table, index) => {
-                if (message.tipo === 'apoyar' || message.tipo === 'Apoyar' || message.tipo === 'corregir' || message.tipo === 'Corregir') {
-                  if(message.tema === 'Asistencia') {
-                    return (
-                      <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <p>{message.table[index].student}</p>
-                          <small>Asistencia: {message.table[index].data}</small>
-                        </div>
-                        <Checkbox disabled checked={checkBox[index][0]} label="Problemas Familiares" onCheck={(event, value) => { checkBox[index][0] = value; this.setState({ checkBox }); }} />
-                        <Checkbox disabled checked={checkBox[index][1]} label="Responsabilidad" onCheck={(event, value) => { checkBox[index][1] = value; this.setState({ checkBox }); }} />
-                        <Checkbox disabled checked={checkBox[index][2]} label="Estado de salud" onCheck={(event, value) => { checkBox[index][2] = value; this.setState({ checkBox }); }} />
-                        <Checkbox disabled checked={checkBox[index][3]} label="Otro" onCheck={(event, value) => { checkBox[index][3] = value; this.setState({ checkBox }); }} />
-                        {checkBox[index][3] && <TextField disabled value={checkBox[index][4]} hintText="Otro motivo" floatingLabelText="Explicación" floatingLabelFixed fullWidth onChange={(event, value) => { checkBox[index][4] = value; this.setState({ checkBox }); }} />}
-                      </div>
-                    );
-                  } else {
-                    return (
-                      <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <p>{message.table[index].student}</p>
-                          <small>Nota: {message.table[index].data}</small>
-                        </div>
-                        <Checkbox disabled checked={checkBox[index][0]} label="Desmotivación" onCheck={(event, value) => { checkBox[index][0] = value; this.setState({ checkBox }); }} />
-                        <Checkbox disabled checked={checkBox[index][1]} label="Responsabilidad" onCheck={(event, value) => { checkBox[index][1] = value; this.setState({ checkBox }); }} />
-                        <Checkbox disabled checked={checkBox[index][2]} label="Compromiso de la familia" onCheck={(event, value) => { checkBox[index][2] = value; this.setState({ checkBox }); }} />
-                        <Checkbox disabled checked={checkBox[index][3]} label="Otro" onCheck={(event, value) => { checkBox[index][3] = value; this.setState({ checkBox }); }} />
-                        {checkBox[index][3] && <TextField disabled value={checkBox[index][4]} hintText="Otro motivo" floatingLabelText="Explicación" floatingLabelFixed fullWidth onChange={(event, value) => { checkBox[index][4] = value; this.setState({ checkBox }); }} />}
-                      </div>
-                    );
-                  }
-                } else return null;
-              })}
-            </Dialog>
           </Card>
+        }
+        {!loading &&
+          <Dialog open={active} actions={actions} autoScrollBodyContent onRequestClose={() => this.setState({ active: false, activeText: [false, false, false] })} title={<p style={{ fontSize: 16, fontWeight: 400 }}>{message.text}</p>}>
+            {message.table && message.table.filter(a => a !== 'title' && a !== false).map((table, index) => {
+              if (message.tipo === 'apoyar' || message.tipo === 'Apoyar' || message.tipo === 'corregir' || message.tipo === 'Corregir') {
+                if (message.tema === 'Asistencia' || message.tema === 'asistencia') {
+                  return (
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <p>{message.table[index].student}</p>
+                        <small>Asistencia: {message.table[index].data}</small>
+                      </div>
+                      <Checkbox disabled checked={checkBox[index][0]} label="Problemas Familiares" onCheck={(event, value) => { checkBox[index][0] = value; this.setState({ checkBox }); }} />
+                      <Checkbox disabled checked={checkBox[index][1]} label="Responsabilidad" onCheck={(event, value) => { checkBox[index][1] = value; this.setState({ checkBox }); }} />
+                      <Checkbox disabled checked={checkBox[index][2]} label="Estado de salud" onCheck={(event, value) => { checkBox[index][2] = value; this.setState({ checkBox }); }} />
+                      <Checkbox disabled checked={checkBox[index][3]} label="Otro" onCheck={(event, value) => { checkBox[index][3] = value; this.setState({ checkBox }); }} />
+                      {checkBox[index][3] && <TextField disabled value={checkBox[index][4]} hintText="Otro motivo" floatingLabelText="Explicación" floatingLabelFixed fullWidth onChange={(event, value) => { checkBox[index][4] = value; this.setState({ checkBox }); }} />}
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <p>{message.table[index].student}</p>
+                        <small>Nota: {message.table[index].data}</small>
+                      </div>
+                      <Checkbox disabled checked={checkBox[index][0]} label="Desmotivación" onCheck={(event, value) => { checkBox[index][0] = value; this.setState({ checkBox }); }} />
+                      <Checkbox disabled checked={checkBox[index][1]} label="Responsabilidad" onCheck={(event, value) => { checkBox[index][1] = value; this.setState({ checkBox }); }} />
+                      <Checkbox disabled checked={checkBox[index][2]} label="Compromiso de la familia" onCheck={(event, value) => { checkBox[index][2] = value; this.setState({ checkBox }); }} />
+                      <Checkbox disabled checked={checkBox[index][3]} label="Otro" onCheck={(event, value) => { checkBox[index][3] = value; this.setState({ checkBox }); }} />
+                      {checkBox[index][3] && <TextField disabled value={checkBox[index][4]} hintText="Otro motivo" floatingLabelText="Explicación" floatingLabelFixed fullWidth onChange={(event, value) => { checkBox[index][4] = value; this.setState({ checkBox }); }} />}
+                    </div>
+                  );
+                }
+              } else return null;
+            })}
+          </Dialog>
         }
       </div>
     );
