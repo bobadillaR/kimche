@@ -43,6 +43,11 @@ export default class EditMessage extends Component {
       redirect: false,
       table: [],
       tab: true,
+      values: [],
+      options: [
+        ['Problemas familiares', 'Responsabilidad', 'Compromiso de la familia', 'Otro'],
+        ['Desmotivación', 'Responsabilidad', 'Compromiso de la familia', 'Otro'],
+      ],
     };
   }
 
@@ -67,10 +72,12 @@ export default class EditMessage extends Component {
             message: message.val() || '',
             userId: message.val().userId || '',
             table: message.val().table || [],
+            values: message.val().values || [],
             que: message.val().que || '',
             porque: message.val().porque || '',
             editDate: message.val().editDate || '',
           });
+          console.log(message.val());
         });
       } else this.setState({ loading: false });
     });
@@ -165,8 +172,9 @@ export default class EditMessage extends Component {
   }
 
   renderSingle() {
-    const { loading, errorTitle, alert, texto, admins, school, teachers, schools, tipoList, tipo, title, visibility, errorType, errorSchool, table, tableTitle, temaList, tema } = this.state;
+    const { loading, errorTitle, alert, texto, admins, school, teachers, schools, tipoList, tipo, title, visibility, errorType, errorSchool, table, options, temaList, tema, values } = this.state;
     const { editable } = this.props;
+    console.log(values);
     return (
       <Paper style={{ margin: '5%', padding: '3%', marginTop: !editable ? 0 : '5%' }} zDepth={4}>
         <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between' }}>
@@ -233,14 +241,12 @@ export default class EditMessage extends Component {
           <Table selectable={false} >
             <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
               <TableRow>
-                <TableHeaderColumn colSpan="3" tooltip="Tabla de Datos" style={{ textAlign: 'center' }}>
-                  <TextField value={tableTitle} floatingLabelText="Titulo" hintText="Nombre de la tabla" onChange={(event, textoVal) => this.setState({ tableTitle: textoVal })} />
-                  <RaisedButton style={{ marginLeft: '10%' }} primary icon={<FontIcon className="material-icons" >add</FontIcon>} label="Agregar fila" onTouchTap={() => { table.push({ data: '', student: '' }); this.setState({ table }); }} />
-                </TableHeaderColumn>
-              </TableRow>
-              <TableRow>
                 <TableHeaderColumn tooltip="Nombre del alumno">Nombre</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Dato">Dato</TableHeaderColumn>
+                <TableHeaderColumn>{options[tema === 'asistencia' ? 0 : 1][0]}</TableHeaderColumn>
+                <TableHeaderColumn>{options[tema === 'asistencia' ? 0 : 1][1]}</TableHeaderColumn>
+                <TableHeaderColumn>{options[tema === 'asistencia' ? 0 : 1][2]}</TableHeaderColumn>
+                <TableHeaderColumn>{options[tema === 'asistencia' ? 0 : 1][3]}</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Eliminar">Eliminar</TableHeaderColumn>
               </TableRow>
             </TableHeader>
@@ -254,12 +260,25 @@ export default class EditMessage extends Component {
                     <TextField value={data.data} hintText="Dato del Alumno" onChange={(event, textoVal) => { table[key].data = textoVal; this.setState({ table }); }} fullWidth />
                   </TableRowColumn>
                   <TableRowColumn>
+                    {values.length > 0 && values[key][0].toString()}
+                  </TableRowColumn>
+                  <TableRowColumn>
+                    {values.length > 0 && values[key][1].toString()}
+                  </TableRowColumn>
+                  <TableRowColumn>
+                    {values.length > 0 && values[key][2].toString()}
+                  </TableRowColumn>
+                  <TableRowColumn>
+                    {values.length > 0 && values[key][4] !== '' ? values[key][4].toString() : 'false'}
+                  </TableRowColumn>
+                  <TableRowColumn>
                     <IconButton onTouchTap={() => { table.splice(key, 1); this.setState({ table }); }}><FontIcon className="material-icons" >delete</FontIcon></IconButton>
                   </TableRowColumn>
                 </TableRow>),
               )}
             </TableBody>
           </Table>
+          <RaisedButton primary icon={<FontIcon className="material-icons" >add</FontIcon>} label="Agregar fila" onTouchTap={() => { table.push({ data: '', student: '' }); this.setState({ table }); }} />
         </div>
         <br />
         {editable &&
