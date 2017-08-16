@@ -45,10 +45,9 @@ export default class MyUSer extends Component {
   }
 
   changePassword() {
-    const { newPassword, confirmPassword, oldPassword } = this.state;
+    const { newPassword, confirmPassword } = this.state;
     const { user } = this.props;
-    const credential = firebase.auth.EmailAuthProvider.credential(user.email, oldPassword);
-    if (newPassword === confirmPassword) user.reauthenticate(credential).then(() => user.updatePassword(newPassword).then(this.setState({ loading: false, alert: 'Contraseña actualizada correctamente' }), error => this.setState({ error })));
+    if (newPassword === confirmPassword) user.updatePassword(newPassword).then(this.setState({ loading: false, alert: 'Contraseña actualizada correctamente' }), error => this.setState({ error }));
     else this.setState({ loading: false, alert: 'Las contraseñas no coinciden, intentalo nuevamente' });
   }
 
