@@ -77,7 +77,6 @@ export default class EditMessage extends Component {
             porque: message.val().porque || '',
             editDate: message.val().editDate || '',
           });
-          console.log(message.val());
         });
       } else this.setState({ loading: false });
     });

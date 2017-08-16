@@ -97,17 +97,21 @@ export default class EditUser extends Component {
         name,
         visibility: true,
         rut,
+        email,
         cellphone,
         admin,
+        schools: user.schools || null
       };
-      user.schools.forEach((school) => {
-        update[`/schools/${school}/${school.admin ? 'admins' : 'teachers'}/${match.params.userId}`] = name;
-        if (school.messages !== undefined) {
-          school.messages.forEach((message) => {
-            update[`/messages/${message}/userName`] = name;
-          });
-        }
-      });
+      if (!admin && user.schools) {
+        Object.keys(user.schools).forEach((school) => {
+          update[`/schools/${school}/${school.admin ? 'admins' : 'teachers'}/${match.params.userId}`] = name;
+          if (school.messages !== undefined) {
+            school.messages.forEach((message) => {
+              update[`/messages/${message}/userName`] = name;
+            });
+          }
+        });
+      }
       database.update(update)
       .then(this.setState({ loading: false, alert: true }))
       .catch(error => this.setState({ error }));
@@ -119,6 +123,7 @@ export default class EditUser extends Component {
   renderSingle() {
     const { loading, errorName, errorEmail, errorCelular, errorRut, admin, name, cellphone, rut, email, alert, visibility, schools } = this.state;
     const { editable } = this.props;
+    console.log(this.state.user);
     return (
       <Paper style={{ margin: '5%', padding: '3%', marginTop: !editable ? 0 : '5%' }} zDepth={4}>
         <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between' }}>

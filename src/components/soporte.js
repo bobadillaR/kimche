@@ -21,6 +21,7 @@ export default class Template extends Component {
 
   render() {
     const { loading, support } = this.state;
+    console.log(support);
     return (
       <div>
         <Paper style={{ margin: '5%', padding: '3%' }} zDepth={4} >
