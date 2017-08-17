@@ -72,6 +72,7 @@ export default class App extends Component {
       database: firebase.database().ref(),
       auth: firebase.auth(),
       config,
+      firebase,
       height: window.innerHeight,
       width: window.innerWidth,
     };

@@ -86,7 +86,7 @@ export default class ViewUsers extends Component {
                     <TableRowColumn style={{ alignItems: 'center', display: 'flex' }}><FontIcon color={yellow500} className="material-icons" >star</FontIcon>{value.name}</TableRowColumn>
                     <TableRowColumn>-</TableRowColumn>
                     <TableRowColumn>{value.email}</TableRowColumn>
-                    <TableRowColumn style={{ alignItems: 'center' }} onTouchTap={() => this.props.history.push(`/admin/users/edit/admins/${key}`)}>Editar <FontIcon className="material-icons" >edit</FontIcon></TableRowColumn>
+                    <TableRowColumn style={{ alignItems: 'center' }} onTouchTap={() => this.props.history.push(`/admin/users/edit/admins/${key}`)}>Editar <FontIcon className="material-icons" style={{ cursor: 'pointer' }} >edit</FontIcon></TableRowColumn>
                   </TableRow>
                 ))}
               </TableBody>

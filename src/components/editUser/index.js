@@ -37,6 +37,7 @@ export default class EditUser extends Component {
       visibility: true,
       schools: {},
       tab: true,
+      editMail: false,
     };
   }
 
@@ -100,7 +101,7 @@ export default class EditUser extends Component {
         email,
         cellphone,
         admin,
-        schools: user.schools || null
+        schools: user.schools || null,
       };
       if (!admin && user.schools) {
         Object.keys(user.schools).forEach((school) => {
@@ -113,6 +114,7 @@ export default class EditUser extends Component {
         });
       }
       database.update(update)
+      // .then(email !== user.email && this.props.user.updateEmail(email))
       .then(this.setState({ loading: false, alert: true }))
       .catch(error => this.setState({ error }));
     } if (name === undefined) this.setState({ errorName: true });
@@ -121,9 +123,9 @@ export default class EditUser extends Component {
   }
 
   renderSingle() {
-    const { loading, errorName, errorEmail, errorCelular, errorRut, admin, name, cellphone, rut, email, alert, visibility, schools } = this.state;
+    const { loading, errorName, errorEmail, errorCelular, errorRut, admin, name, cellphone, rut, email, alert, visibility, schools, editMail } = this.state;
     const { editable } = this.props;
-    console.log(this.state.user);
+    console.log(editMail, editable || editMail);
     return (
       <Paper style={{ margin: '5%', padding: '3%', marginTop: !editable ? 0 : '5%' }} zDepth={4}>
         <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between' }}>
@@ -184,6 +186,9 @@ export default class EditUser extends Component {
                 checked={visibility}
               />
             }
+            {/* {editable &&
+              <RaisedButton style={{ marginTop: 10 }} primary icon={<FontIcon className="material-icons" >email</FontIcon>} label="Editar Email" onTouchTap={() => this.setState({ editMail: true })} />
+            } */}
             <br />
             <RaisedButton style={{ float: 'right' }} primary disabled={loading} icon={<FontIcon className="material-icons" >person_add</FontIcon>} label={editable ? 'Guardar Usuario' : 'Crear Usuario'} onTouchTap={() => { if (editable) this.edit(); else this.create(); }} />
             <br />

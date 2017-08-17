@@ -28,6 +28,7 @@ export default class MyUSer extends Component {
       cellphone: userData.cellphone,
       tipo: userData.tipo,
       alert: false,
+      alertType: 'success',
     });
   }
 
@@ -40,25 +41,45 @@ export default class MyUSer extends Component {
         name,
         cellphone,
       })
-      .then(this.setState({ loading: false, alert: `Usuario ${name} fue editado correctamente` }));
+      .then(this.setState({ loading: false, alert: `Usuario ${name} fue editado correctamente`, alertType: 'success' }));
     }
   }
 
   changePassword() {
-    const { newPassword, confirmPassword } = this.state;
-    const { user } = this.props;
-    if (newPassword === confirmPassword) user.updatePassword(newPassword).then(this.setState({ loading: false, alert: 'Contraseña actualizada correctamente' }), error => this.setState({ error }));
-    else this.setState({ loading: false, alert: 'Las contraseñas no coinciden, intentalo nuevamente' });
+    const { newPassword, confirmPassword, oldPassword } = this.state;
+    const { auth } = this.props;
+    const user = auth.currentUser;
+    if (newPassword === confirmPassword) {
+      user.reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(user.email, oldPassword)).then(() =>
+        user.updatePassword(newPassword).then(
+          this.setState({ loading: false, alert: 'Contraseña actualizada correctamente', alertType: 'success' }),
+          error => this.setState({ error }),
+        ), () => this.setState({ loading: false, alert: 'Las contraseñas anterior es incorrecta.', alertType: 'danger' }));
+    } else this.setState({ loading: false, alert: 'Las contraseñas no coinciden, intentalo nuevamente', alertType: 'danger' });
+  }
+
+  changeMail() {
+    const { newMail, oldPassword } = this.state;
+    const { auth, database } = this.props;
+    const user = auth.currentUser;
+    if (newMail.includes('.') && newMail.includes('@')) {
+      user.reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(user.email, oldPassword)).then(() =>
+        user.updateEmail(newMail).then(
+          database.child(user.displayName === 'admin' ? 'admins' : 'users').child(user.uid).update({ email: newMail }).then(
+            this.setState({ loading: false, alert: 'Email actualizado correctamente' }),
+          ), error => this.setState({ error }),
+        ), () => this.setState({ loading: false, alert: 'Las contraseñas anterior es incorrecta.', alertType: 'danger' }));
+    } else this.setState({ loading: false, alert: 'El mail anterior no coincide, reintentalo', alertType: 'danger' });
   }
 
   render() {
-    const { name, errorName, loading, cellphone, errorCelular, passwordView, newPassword, confirmPassword, oldPassword, alert } = this.state;
+    const { name, errorName, loading, cellphone, errorCelular, passwordView, newPassword, confirmPassword, oldPassword, alert, emailView, newMail, alertType } = this.state;
     return (
       <div>
         <Paper style={{ margin: '5%', padding: '3%' }} zDepth={4}>
           <h2>Editar Usuario {name}</h2>
           <Divider />
-          {alert && <Message message={alert} tipo="success" time={4000} onClose={() => this.setState({ alert: false })} />}
+          {alert && <Message message={alert} tipo={alertType} time={4000} onClose={() => this.setState({ alert: false })} />}
           {loading ?
             <center><CircularProgress size={80} /></center>
           :
@@ -71,12 +92,14 @@ export default class MyUSer extends Component {
                 <FontIcon style={{ marginRight: '2%' }} className="material-icons" >smartphone</FontIcon>
                 <TextField value={cellphone} floatingLabelFixed hintText="Celular de usuario" floatingLabelText="Celular" onChange={(event, cellphoneVal) => this.setState({ cellphone: cellphoneVal })} fullWidth errorText={errorCelular && 'Campo obligatorio'} />
               </div>
+              {(passwordView || emailView) &&
+                <div style={{ alignItems: 'center', display: 'flex' }}>
+                  <FontIcon style={{ marginRight: '2%' }} className="material-icons" >enhanced_encryption</FontIcon>
+                  <TextField value={oldPassword} type="password" floatingLabelFixed hintText="Contraseña anterior" floatingLabelText="Contraseña Previa" onChange={(event, rutVal) => this.setState({ oldPassword: rutVal })} fullWidth />
+                </div>
+              }
               {passwordView &&
                 <div>
-                  <div style={{ alignItems: 'center', display: 'flex' }}>
-                    <FontIcon style={{ marginRight: '2%' }} className="material-icons" >enhanced_encryption</FontIcon>
-                    <TextField value={oldPassword} type="password" floatingLabelFixed hintText="Contraseña anterior" floatingLabelText="Contraseña Previa" onChange={(event, rutVal) => this.setState({ oldPassword: rutVal })} fullWidth />
-                  </div>
                   <div style={{ alignItems: 'center', display: 'flex' }}>
                     <FontIcon style={{ marginRight: '2%' }} className="material-icons" >no_encryption</FontIcon>
                     <TextField value={newPassword} type="password" floatingLabelFixed hintText="Contraseña nueva" floatingLabelText="Contraseña Nueva" onChange={(event, rutVal) => this.setState({ newPassword: rutVal })} fullWidth />
@@ -87,12 +110,28 @@ export default class MyUSer extends Component {
                   </div>
                 </div>
               }
+              {emailView &&
+                <div>
+                  <div style={{ alignItems: 'center', display: 'flex' }}>
+                    <FontIcon style={{ marginRight: '2%' }} className="material-icons" >label</FontIcon>
+                    <TextField value={newMail} floatingLabelFixed hintText="Mail nuevo" floatingLabelText="Mail Nuevo" onChange={(event, rutVal) => this.setState({ newMail: rutVal })} fullWidth />
+                  </div>
+                </div>
+              }
               <br />
               <RaisedButton
                 primary
                 onTouchTap={() => { if (passwordView) this.changePassword(); else this.setState({ passwordView: !passwordView }); }}
                 label={passwordView ? 'Confimar cambio contraseña' : 'Cambiar Contraseña'}
                 icon={<FontIcon className="material-icons" >vpn_key</FontIcon>}
+              />
+              <br />
+              <RaisedButton
+                style={{ marginTop: 10 }}
+                primary
+                onTouchTap={() => { if (emailView) this.changeMail(); else this.setState({ emailView: !emailView }); }}
+                label={emailView ? 'Confimar cambio email' : 'Cambiar Email'}
+                icon={<FontIcon className="material-icons" >email</FontIcon>}
               />
               <br />
               <br />
