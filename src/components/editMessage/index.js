@@ -173,7 +173,6 @@ export default class EditMessage extends Component {
   renderSingle() {
     const { loading, errorTitle, alert, texto, admins, school, teachers, schools, tipoList, tipo, title, visibility, errorType, errorSchool, table, options, temaList, tema, values } = this.state;
     const { editable } = this.props;
-    console.log(values);
     return (
       <Paper style={{ margin: '5%', padding: '3%', marginTop: !editable ? 0 : '5%' }} zDepth={4}>
         <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between' }}>
@@ -240,6 +239,7 @@ export default class EditMessage extends Component {
           <Table selectable={false} >
             <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
               <TableRow>
+                <TableHeaderColumn tooltip="RUT del alumno">RUT</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Nombre del alumno">Nombre</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Dato">Dato</TableHeaderColumn>
                 <TableHeaderColumn>{options[tema === 'asistencia' ? 0 : 1][0]}</TableHeaderColumn>
@@ -252,6 +252,9 @@ export default class EditMessage extends Component {
             <TableBody showRowHover displayRowCheckbox={false}>
               {table.map((data, key) =>
                 (<TableRow key={data.student} >
+                  <TableRowColumn>
+                    <TextField value={data.rut} hintText="RUT del Alumno" onChange={(event, textoVal) => { table[key].rut = textoVal; this.setState({ table }); }} fullWidth />
+                  </TableRowColumn>
                   <TableRowColumn>
                     <TextField value={data.student} hintText="Nombre del Alumno" onChange={(event, textoVal) => { table[key].student = textoVal; this.setState({ table }); }} fullWidth />
                   </TableRowColumn>

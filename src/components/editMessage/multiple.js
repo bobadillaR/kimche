@@ -41,13 +41,14 @@ export default class Multple extends Component {
     data.forEach((dataVal) => {
       const messageKey = database.child('school').push().key;
       const table = [
-        dataVal.data1 !== undefined && { data: dataVal.data1, student: dataVal.student1 },
-        dataVal.data2 !== undefined && { data: dataVal.data2, student: dataVal.student2 },
-        dataVal.data3 !== undefined && { data: dataVal.data3, student: dataVal.student3 },
+        dataVal.data1 !== undefined && { data: dataVal.data1, student: dataVal.student1, rut: dataVal.rut1 },
+        dataVal.data2 !== undefined && { data: dataVal.data2, student: dataVal.student2, rut: dataVal.rut2 },
+        dataVal.data3 !== undefined && { data: dataVal.data3, student: dataVal.student3, rut: dataVal.rut3 },
       ];
       update[`messages/${messageKey}/title`] = dataVal.title;
       update[`messages/${messageKey}/text`] = dataVal.text;
       update[`messages/${messageKey}/tipo`] = dataVal.tipo;
+      update[`messages/${messageKey}/rut`] = dataVal.rut;
       update[`messages/${messageKey}/state`] = 0;
       update[`messages/${messageKey}/table`] = table || null;
       update[`messages/${messageKey}/tema`] = dataVal.tema || null;
@@ -71,7 +72,7 @@ export default class Multple extends Component {
       const data = JSON.parse(textValue);
       let validatorGeneral = true;
       const validator = data.map((element) => {
-        if (element.userId !== '' && element.schoolId !== '' && element.tipo !== '') return 1;
+        if (element.userId !== '' && element.schoolId !== '' && element.tipo !== '' && element.rut !== '') return 1;
         else { validatorGeneral = false; return 0; }
       });
       this.setState({ data, validator, validatorGeneral, charged: 0 });

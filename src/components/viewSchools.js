@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import { Link } from 'react-router-dom';
-
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 import CircularProgress from 'material-ui/CircularProgress';
 import Paper from 'material-ui/Paper';
 import FontIcon from 'material-ui/FontIcon';
@@ -15,6 +16,7 @@ export default class ViewSchools extends Component {
       users: {},
       schools: {},
       loading: true,
+      school: '',
     };
   }
 
@@ -37,7 +39,7 @@ export default class ViewSchools extends Component {
   // }
 
   render() {
-    const { schools, loading } = this.state;
+    const { schools, loading, school } = this.state;
     return (
       <div>
         <Paper style={{ margin: '5%', padding: '3%' }} zDepth={4} >
@@ -46,6 +48,14 @@ export default class ViewSchools extends Component {
             <Link to="/admin/schools/create">
               <RaisedButton primary icon={<FontIcon className="material-icons" >school</FontIcon>} label="Crear Colegio" />
             </Link>
+          </div>
+          <div style={{ alignItems: 'center', display: 'flex' }}>
+            <FontIcon style={{ marginRight: '2%' }} className="material-icons" >school</FontIcon>
+            <SelectField value={school} hintText="Nombre del colegio" floatingLabelText="Colegio" onChange={(event, index, value) => this.setState({ school: value })} fullWidth >
+              {Object.entries(schools).map(([key, value]) => (
+                <MenuItem key={key} value={key} primaryText={value.name} />
+              ))}
+            </SelectField>
           </div>
           {loading ?
             <center><CircularProgress size={80} /></center>
@@ -66,7 +76,7 @@ export default class ViewSchools extends Component {
                 </TableRow>
               </TableHeader>
               <TableBody showRowHover displayRowCheckbox={false}>
-                {Object.entries(schools).map(([key, value]) => (
+                {Object.entries(schools).filter(([key]) => { if (school === '') return true; else return key === school; }).map(([key, value]) => (
                   <TableRow key={key}>
                     <TableRowColumn>{key}</TableRowColumn>
                     <TableRowColumn>{value.name}</TableRowColumn>

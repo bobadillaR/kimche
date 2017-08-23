@@ -60,6 +60,7 @@ export default class Login extends Component {
   render() {
     const { error, recoveryView, loading, messageRecovery, redirect } = this.state;
     if (redirect) return <Redirect to={redirect} />;
+    console.log(error);
     return (
       <div style={{ display: 'flex', marginTop: '10%', justifyContent: 'center' }}>
         <Paper style={{ height: '50%', width: '75%', padding: 20 }} zDepth={2} >
@@ -69,9 +70,9 @@ export default class Login extends Component {
           {recoveryView && <Message message="Agregue el mail de usuario para enviarle un mensaje con la informacion de recuperacion de contraseña" tipo="info" />}
           {messageRecovery && <Message message="Se ha enviado un mail para restablecer su contraseña" tipo="success" time={4000} />}
           <form onSubmit={e => this.login(e)}>
-            <TextField hintText="Mail de usuario" floatingLabelText="Mail" onChange={(event, email) => this.setState({ email })} fullWidth errorText={error && error.code.includes('mail') && 'Ingrese un mail valido'} />
+            <TextField hintText="Mail de usuario" floatingLabelText="Mail" onChange={(event, email) => this.setState({ email })} fullWidth errorText={error && (error.code.includes('mail') || error.code.includes('user-not-found')) && 'Ingrese un mail valido'} />
             {!recoveryView && <div>
-              <TextField hintText="Contraseña" floatingLabelText="Contraseña" type="password" onChange={(a, password) => this.setState({ password })} fullWidth errorText={error && error.code.includes('password') && 'Lo lamentamos no hemos podido ingresar con este usuario y contraseña'} />
+              <TextField hintText="Contraseña" floatingLabelText="Contraseña" type="password" onChange={(a, password) => this.setState({ password })} fullWidth errorText={error && error.code.includes('password') && 'Contraseña incorrecta'} />
               <RaisedButton type="submit" primary disabled={loading} label="Iniciar Sesión" fullWidth />
             </div>
             }
