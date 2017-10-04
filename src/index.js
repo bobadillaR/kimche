@@ -13,6 +13,7 @@ import CircularProgress from 'material-ui/CircularProgress';
 
 import Navbar from './components/navbar';
 import LandingPage2 from './components/landingPage2';
+// import LandingPage from './components/landingPage';
 import Soporte from './components/soporte';
 import Login from './components/login';
 import MyUser from './components/myUser';
@@ -30,7 +31,7 @@ import './index.css';
 
 const muiTheme = getMuiTheme({
   toolbar: {
-    height: 60, // Instead of 64
+    height: 55, // Instead of 64
     backgroundColor: grey800,
     iconColor: white,
   },
